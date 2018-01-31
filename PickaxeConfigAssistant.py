@@ -27,6 +27,7 @@ class PickaxeConfigAssistant():
 		print("Creating new PickaxeConfigAssistant()")
 		self.mode = {"mining_software":"XMRig", "gpu_type":"nVidia"}
 		self.gpu_name = "GPU #0"
+		self.version_number = 126327
 		#
 		#	Settings for XMRig
 		self.index = kwargs.get("index", 0)
@@ -427,6 +428,7 @@ class PickaxeConfigAssistant():
 		rectangles_wattage = ax.bar(ind + self.bar_width*3, b, self.bar_width, color=self.bar_colour_wattage)
 		#
 		#	Format the graph axis markers
+		ax.set_xlabel('\n\n\nPickaxe Config Assistant\nALPHA-{}'.format(self.version_number))
 		ax.set_ylabel('Hashrate')
 		ax.set_title('{} - XMRig Hashrate - XMR'.format(self.gpu_name))
 		ax.set_xticks(ind + self.bar_width*2)

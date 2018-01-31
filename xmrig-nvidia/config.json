@@ -24,11 +24,11 @@
     "threads": [
         {
             "index": 0,
-            "threads": 32,
+            "threads": 30,
             "blocks": 8,
             "bfactor": 12,
             "bsleep": 25,
-            "affine_to_cpu": 1
+            "affine_to_cpu": 0
         }
     ]
 }

@@ -1,0 +1,19 @@
+[
+    {
+        "config": {
+            "index": 0,
+            "threads": 28,
+            "blocks": 8,
+            "bfactor": 12,
+            "bsleep": 25,
+            "affine_to_cpu": 0
+        },
+        "analysis": {
+            "total_results": 30,
+            "max_hash_rate": 225.5,
+            "min_hash_rate": 221.6,
+            "average_hash_rate": 223.1,
+            "average_wattage": 15
+        }
+    }
+]

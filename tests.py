@@ -3,13 +3,13 @@ from PickaxeConfigAssistant import *
 #
 #	Basic Test (only Threads)
 #	Runs: [28, 8], [29, 8], [30, 8]
-
+"""
 pca = PickaxeConfigAssistant(
 	benchmark_mining_seconds=42, 
 	thread_count=28, block_count=8, 
 	thread_count_min=28, thread_count_max=30, thread_count_step=1, 
 	block_count_min=8, block_count_max=8, block_count_step=2)
-
+"""
 # 1:05PM 30/01/2018 - Pass
 
 #
@@ -42,13 +42,13 @@ pca = PickaxeConfigAssistant(
 
 #
 #	Simple test, 1x run
-"""
+
 pca = PickaxeConfigAssistant(
 	benchmark_mining_seconds=42, 
-	thread_count=28, block_count=8, 
-	thread_count_min=28, thread_count_max=28, thread_count_step=1, 
+	thread_count=30, block_count=8, 
+	thread_count_min=30, thread_count_max=30, thread_count_step=1, 
 	block_count_min=8, block_count_max=8, block_count_step=1)
-"""
+
 #
 #	Simple test, 2x run
 """

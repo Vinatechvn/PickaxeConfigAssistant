@@ -14,6 +14,7 @@ def main(argv):
 	bfactor = 12
 	bsleep = 25
 	affine_to_cpu = 0
+	thread_count = 8
 
 
 	try:
@@ -42,11 +43,13 @@ def main(argv):
 		elif opt in ("-t", "--threads"):
 			thread_count = int(arg.strip())
 			thread_count_min = thread_count
+			thread_count_max = thread_count
 		#
 		#	Number of blocks to have in our XMRig GPU worker thread
 		elif opt in ("-b", "--blocks"):
 			block_count = int(arg.strip())
 			block_count_min = block_count
+			block_count_max = block_count
 		#
 		#	Max/Min/Steps for our threads
 		elif opt in ("-tmax", "--threadsmax"):

@@ -27,6 +27,7 @@ class PickaxeConfigAssistant():
 		print("Creating new PickaxeConfigAssistant()")
 		self.mode = {"mining_software":"XMRig", "gpu_type":"nVidia"}
 		self.gpu_name = "GPU #0"
+		self.gpu_clocks = {"core":0, "memory":0}
 		self.version_number = 126327
 		#
 		#	Settings for XMRig
@@ -73,9 +74,10 @@ class PickaxeConfigAssistant():
 		#util.mkdir(self.path_results_folder)
 		#
 		#	Regex
-		self.regex_hash_rate_second = r"\d+.\d n"
+		self.regex_hash_rate_second = r"15m \d+.\d"
 		self.regex_wattage = r"\d+W"
 		self.regex_card_name = r"\d:       .+@"
+		self.regex_card_clocks = r"@ \d+\/\d+"
 
 	#
 	#	Represent the current thread_string data as our print()
@@ -140,6 +142,7 @@ class PickaxeConfigAssistant():
 			#	Update our GPU Name if it is not already set
 			if self.gpu_name == "GPU #0":
 				self.gpu_name = self.read_gpu_name_from_xmrig_log()
+				self.gpu_clocks = self.read_gpu_clocks_from_xmrig_log()
 			#
 			#	Clear the old XMRig config file
 			util.write_file(self.get_xmrig_log_file_path(), "")
@@ -209,8 +212,27 @@ class PickaxeConfigAssistant():
 		gpu_name_search = re.finditer(self.regex_card_name, xmrrig_log_file_contents)
 		for matchNum, match in enumerate(gpu_name_search):
 			gpu_name_string = (match.group().split("       ")[1])[:-2]
+			self.gpu_clocks = {
+				"core":0,
+				"memory":0
+			}
 		
 		return gpu_name_string
+
+	def read_gpu_clocks_from_xmrig_log(self):
+		gpu_clocks = {
+			"core":0,
+			"memory":0
+		}
+		xmrrig_log_file_contents = util.read_file(self.get_xmrig_log_file_path())
+		gpu_clocks_search = re.finditer(self.regex_card_clocks, xmrrig_log_file_contents)
+		for matchNum, match in enumerate(gpu_clocks_search):
+			gpu_clocks_string = match.group()[2:]
+			gpu_clocks = {
+				"core": gpu_clocks_string.split("/")[0],
+				"memory": gpu_clocks_string.split("/")[1]
+			}		
+		return gpu_clocks
 
 	#
 	#	A function to update XMRig's config.json file with a given threads object
@@ -268,7 +290,7 @@ class PickaxeConfigAssistant():
 			#
 			#	Create simple lists from our regex elements
 			for matchNum, match in enumerate(hash_rates):
-				hash_rates_list.append(float(match.group().split(" n")[0]))
+				hash_rates_list.append(float(match.group().split("15m ")[1]))
 			for matchNum, match in enumerate(wattages):
 				wattages_list.append(int(match.group().replace("W", "")))
 
@@ -430,7 +452,7 @@ class PickaxeConfigAssistant():
 		#	Format the graph axis markers
 		ax.set_xlabel('\n\n\nPickaxe Config Assistant\nALPHA-{}'.format(self.version_number))
 		ax.set_ylabel('Hashrate')
-		ax.set_title('{} - XMRig Hashrate - XMR'.format(self.gpu_name))
+		ax.set_title('{} [Core: {} MHz, Memory: {} MHz] - XMRig Hashrate - XMR'.format(self.gpu_name, self.gpu_clocks["core"], self.gpu_clocks["memory"]))
 		ax.set_xticks(ind + self.bar_width*2)
 		ax.set_xticklabels((x))
 		#
@@ -458,5 +480,6 @@ class PickaxeConfigAssistant():
 				ha='center', va='bottom')
 
 		#fig.show()
+		print("Saving graph to: {}".format(filfile_nameename))
 		fig.savefig(file_name, facecolor=self.background_colour, transparent=True)
 

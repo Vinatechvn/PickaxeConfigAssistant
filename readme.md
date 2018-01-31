@@ -22,11 +22,11 @@ _Please note only Windows support is available right now, the Python script shou
 
 
 ## Usage
-1. Install matplotlib `pip install matplotlib` for Python.
+1. Have Python3+ installed, install matplotlib `pip install matplotlib` for Python.
 2. Download the release version of [xmrig-nvidia](https://github.com/xmrig/xmrig-nvidia/releases).
 3. Clone this repository `https://github.com/PentagonalCube/PickaxeConfigAssistant.git`.
 4. Copy the `xmrig-nvidia.exe` file into the `xmrig-nvidia` folder of the downloaded copy of Pickaxe Config Assistant.
-5. Use Python3+ to run the `main.py` file and hand in the arguments from the list below in order to configure it to your requirements.
+5. Use Python3+ to run the `main.py` file (`python main.py < **args >`) and hand in the arguments from the list below in order to configure it to your requirements.
 
 ### Command line options
 ```
@@ -49,11 +49,25 @@ _Please note only Windows support is available right now, the Python script shou
 ```
 
 ### Usage Examples
-The command below will run a 42 second benchmark for the XMRig settings [28x8, 29x8, 30x8, 31x8, 32x8].
+Default benchmark timing for a single setting [30x8] on a system with only 1 GPU (or the target GPU in the first slot):
 ```
-main.py --index 0 --threads 28 --threadsmax 32 --threadsstep 1 --blocks 8 --blocksmax 8 --blocksstep 1 --affinity 1 --seconds 42 
+main.py --threads 30 --blocks 8
 ```
 
+42 second benchmarks for the XMRig settings [28x8, 29x8, 30x8, 31x8, 32x8]:
+```
+main.py --index 0 --threads 28 --threadsmax 32 --threadsstep 1 --blocks 8 --blocksmax 8 --blocksstep 1 --affinity 0 --seconds 42
+```
+
+42 second benchmarks for the XMRig settings [28x9, 32x9, 28x10, 32x10] for GPU at index 1 (GPU #1):
+```
+main.py --index 1 --threads 28 --threadsmax 32 --threadsstep 4 --blocks 9 --blocksmax 10 --blocksstep 1 --seconds 42
+```
+
+22 second benchmarks for the XMRig settings with just increasing threads for GPU at index 3 (GPU #3):
+```
+main.py --index 1 --threads 8 --threadsmax 192 --threadsstep 8 --blocks 8 --seconds 22
+```
 
 ## Donations
 This software is provided free of charge with no advertisment of any kind, please consider donating if this is a project you would like to see improve faster than it normally would.

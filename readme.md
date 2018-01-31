@@ -49,7 +49,7 @@ _Please note only Windows support is available right now, the Python script shou
 ```
 
 ### Usage Examples
-Default benchmark timing for a single setting [30x8] on a system with only 1 GPU (or the target GPU in the first slot):
+Default benchmark timing for a single setting [30x8] on a system with only 1 GPU (or GPU #0 is our target):
 ```
 main.py --threads 30 --blocks 8
 ```
@@ -59,14 +59,14 @@ main.py --threads 30 --blocks 8
 main.py --index 0 --threads 28 --threadsmax 32 --threadsstep 1 --blocks 8 --blocksmax 8 --blocksstep 1 --affinity 0 --seconds 42
 ```
 
-42 second benchmarks for the XMRig settings [28x9, 32x9, 28x10, 32x10] for GPU at index 1 (GPU #1):
+42 second benchmarks for the XMRig settings [28x9, 32x9, 28x10, 32x10] for a GPU at index 1 (GPU #1):
 ```
 main.py --index 1 --threads 28 --threadsmax 32 --threadsstep 4 --blocks 9 --blocksmax 10 --blocksstep 1 --seconds 42
 ```
 
-22 second benchmarks for the XMRig settings with just increasing threads for GPU at index 3 (GPU #3):
+22 second benchmarks for XMRig settings with increasing threads for a GPU at index 3 (GPU #3):
 ```
-main.py --index 1 --threads 8 --threadsmax 192 --threadsstep 8 --blocks 8 --seconds 22
+main.py --index 3 --threads 8 --threadsmax 192 --threadsstep 8 --blocks 8 --seconds 22
 ```
 
 ## Donations

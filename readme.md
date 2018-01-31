@@ -22,10 +22,11 @@ _Please note only Windows support is available right now, the Python script shou
 
 
 ## Usage
-1. Download the release version of [xmrig-nvidia](https://github.com/xmrig/xmrig-nvidia/releases).
-2. Download this repository.
-3. Copy the contents of xmrig-nvidia into the `xmrig-nvidia` folder.
-4. Use Python3+ to run the `main.py` file and hand in the arguments from the list below in order to configure it to your requirements.
+1. Install matplotlib `pip install matplotlib` for Python.
+2. Download the release version of [xmrig-nvidia](https://github.com/xmrig/xmrig-nvidia/releases).
+3. Clone this repository `https://github.com/PentagonalCube/PickaxeConfigAssistant.git`.
+4. Copy the `xmrig-nvidia.exe` file into the `xmrig-nvidia` folder of the downloaded copy of Pickaxe Config Assistant.
+5. Use Python3+ to run the `main.py` file and hand in the arguments from the list below in order to configure it to your requirements.
 
 ### Command line options
 ```

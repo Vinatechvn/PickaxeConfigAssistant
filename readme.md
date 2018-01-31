@@ -1,5 +1,5 @@
 # Pickaxe Config Assistant
-Pickaxe Config Assistant is a Python based script that can run [xmrig-nvidia](https://github.com/xmrig/xmrig-nvidia) for a set period of time and then analyse what hashrate the configuration achieved. The configuration is handed into the application at runtime and then the number of threads/blocks in the config is iterated through until reaching the `threadsmax` and `blocksmax` values.
+Pickaxe Config Assistant (PCA) is a Python based script that can run [xmrig-nvidia](https://github.com/xmrig/xmrig-nvidia) for a set period of time and then analyse what hashrate the configuration achieved. The configuration is handed into the application at runtime and then the number of threads/blocks in the config is iterated through until reaching the `threadsmax` and `blocksmax` values.
 
 After completing a run of XMRig using the current configuration, a JSON file is created containing the information about that run. Once all runs have been completed, a graph of the total results is created.
 
@@ -15,7 +15,7 @@ _Please note only Windows support is available right now, the Python script shou
 
 ## Features
 * Helps to identify the best thread and block values for any given Nvidia GPU that supports XMrig.
-* PyXMRRigConfig runs XMRig for a short time to analyse the output from XMRig's log.
+* PCA runs XMRig for a short time to analyse the output from XMRig's log.
 * Generates a graph of the min, max, average and wattage draw from each thread/block settings.
 * Generates JSON data for the information gathered.
 * Fully automated benchmarking.

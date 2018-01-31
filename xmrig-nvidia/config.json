@@ -1,0 +1,34 @@
+{
+    "algo": "cryptonight",
+    "api": {
+        "access-token": null,
+        "port": 0,
+        "worker-id": null
+    },
+    "background": false,
+    "colors": true,
+    "donate-level": 1,
+    "log-file": ".\\logs\\log.txt",
+    "pools": [
+        {
+            "keepalive": true,
+            "nicehash": false,
+            "pass": "TEST:mun@kerbin.xyz",
+            "url": "pool.supportxmr.com:7777",
+            "user": "44tS9Hxcadqg8g4Vy8Tfxt7s41ktiXe2dHetBmuDA3UtX9bWhx6bHbw5E6XnkB69mZfk1GEzb6TVLX68CgirCcebFpVDRoX"
+        }
+    ],
+    "print-time": 1,
+    "retries": 5,
+    "retry-pause": 5,
+    "threads": [
+        {
+            "index": 0,
+            "threads": 32,
+            "blocks": 8,
+            "bfactor": 12,
+            "bsleep": 25,
+            "affine_to_cpu": 1
+        }
+    ]
+}

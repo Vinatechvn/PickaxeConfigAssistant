@@ -11,7 +11,9 @@ def main(argv):
 	seconds = 42
 	thread_count, thread_count_step, thread_count_min, thread_count_max = 1, 1, 1, 1
 	block_count, block_count_step, block_count_min, block_count_max = 1, 1, 1, 1
-	bfactor, bsleep, affine_to_cpu = 1, 1, 1
+	bfactor = 12
+	bsleep = 25
+	affine_to_cpu = 0
 
 
 	try:

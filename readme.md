@@ -18,11 +18,11 @@ _Please note only Windows support is available right now, the Python script shou
 * PCA runs XMRig for a short time to analyse the output from XMRig's log.
 * Generates a graph of the min, max, average and wattage draw from each thread/block settings.
 * Generates JSON data for the information gathered.
-* Fully automated benchmarking.
+* Fully automated benchmarking (rough).
 
 
 ## Usage
-1. Download the release version of [xmrig-nvidia](https://github.com/xmrig/xmrig-nvidia/releases)
+1. Download the release version of [xmrig-nvidia](https://github.com/xmrig/xmrig-nvidia/releases).
 2. Download this repository.
 3. Copy the contents of xmrig-nvidia into the `xmrig-nvidia` folder.
 4. Use Python3+ to run the `main.py` file and hand in the arguments from the list below in order to configure it to your requirements.

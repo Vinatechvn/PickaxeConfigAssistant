@@ -40,8 +40,8 @@ class PickaxeConfigAssistant():
 		self.benchmark_mining_seconds = kwargs.get("benchmark_mining_seconds", 42)
 		self.block_count_min = kwargs.get("block_count_min", self.block_count)
 		self.thread_count_min = kwargs.get("thread_count_min", self.thread_count)
-		self.thread_count_max = kwargs.get("thread_count_max", 1)
-		self.block_count_max = kwargs.get("block_count_max", 1)
+		self.thread_count_max = kwargs.get("thread_count_max", self.thread_count)
+		self.block_count_max = kwargs.get("block_count_max", self.block_count)
 		self.thread_count_step = kwargs.get("thread_count_step", 1)
 		self.block_count_step = kwargs.get("block_count_step", 1)
 		#
@@ -82,6 +82,13 @@ class PickaxeConfigAssistant():
 		return json.dumps(self.generate_thread_setting_object())
 
 	#
+	#	Get the total number of loops the application will be active for
+	def calculate_total_number_of_iterations(self):
+		thread_loops = 1 + (self.thread_count_max / self.thread_count_step - self.thread_count_min / self.thread_count_step)
+		block_loops = 1 + (self.block_count_max / self.block_count_step - self.block_count_min / self.block_count_step)
+		return thread_loops * block_loops
+
+	#
 	#	M A I N L I N E
 	#
 	#	Run the instances of XMRig with the given inputs and gather data from the log
@@ -96,9 +103,7 @@ class PickaxeConfigAssistant():
 		util.write_file(self.get_xmrig_log_file_path(), "")
 		#
 		#	Print estimated run time
-		thread_loops = self.thread_count_max - self.thread_count_min + 1
-		block_loops = self.block_count_max - self.block_count_min + 1
-		estimated_run_time = self.benchmark_mining_seconds * thread_loops * block_loops
+		estimated_run_time = self.benchmark_mining_seconds * self.calculate_total_number_of_iterations()
 		print("Estimated run time: {} minutes".format(int(estimated_run_time / 60)))
 		#
 		#	While we are within the limits of all of our settings, iterate
@@ -289,7 +294,10 @@ class PickaxeConfigAssistant():
 					if wat > 0:
 						total += wat
 						elements += 1
-				hash_rate_object["average_wattage"] = int(total / elements)
+				if elements != 0:
+					hash_rate_object["average_wattage"] = int(total / elements)
+				else:
+					hash_rate_object["average_wattage"] = 0
 			else:
 				hash_rate_object["min_hash_rate"] = 0
 				hash_rate_object["ERROR"] = True

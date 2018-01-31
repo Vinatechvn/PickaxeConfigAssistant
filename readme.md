@@ -70,7 +70,7 @@ main.py --index 3 --threads 8 --threadsmax 192 --threadsstep 8 --blocks 8 --seco
 ```
 
 ## Donations
-This software is provided free of charge with no advertisment of any kind, please consider donating if this is a project you would like to see improve faster than it normally would.
+This software is provided free of charge with no advertisement of any kind, please consider donating if this is a project you would like to see improve faster than it normally would.
 * XMR: 44tS9Hxcadqg8g4Vy8Tfxt7s41ktiXe2dHetBmuDA3UtX9bWhx6bHbw5E6XnkB69mZfk1GEzb6TVLX68CgirCcebFpVDRoX
 
 

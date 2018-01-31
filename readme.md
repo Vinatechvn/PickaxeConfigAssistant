@@ -1,5 +1,5 @@
-# PyXMRigConfig
-PyXMRigConfig is a Python based script that can run [xmrig-nvidia](https://github.com/xmrig/xmrig-nvidia) for a set period of time and then analyse what hashrate the configuration achieved. The configuration is handed into the application at runtime and then the number of threads/blocks in the config is iterated through until reaching the `threadsmax` and `blocksmax` values.
+# Pickaxe Config Assistant
+Pickaxe Config Assistant is a Python based script that can run [xmrig-nvidia](https://github.com/xmrig/xmrig-nvidia) for a set period of time and then analyse what hashrate the configuration achieved. The configuration is handed into the application at runtime and then the number of threads/blocks in the config is iterated through until reaching the `threadsmax` and `blocksmax` values.
 
 After completing a run of XMRig using the current configuration, a JSON file is created containing the information about that run. Once all runs have been completed, a graph of the total results is created.
 

@@ -29,22 +29,22 @@ _Please note only Windows support is available right now, the Python script shou
 
 ### Command line options
 ```
-  --seconds					The length of time in seconds we will run XMRig for (default: 42)
+  --seconds				The length of time in seconds we will run XMRig for (default: 42)
 
-  --threads, 				The number of threads to have in our GPU worker (default: 8)
-  --blocks,					The number of blocks to have in our GPU worker (default: 1)
+  --threads 			The number of threads to have in our GPU worker (default: 8)
+  --blocks				The number of blocks to have in our GPU worker (default: 1)
 
-  --threadsmax,				Maximum number of threads for our GPU worker
-  --threadsmin,				Minimum number of threads for our GPU worker
-  --threadsstep,			The steps we should increment our thread count with each iteration (default: 1)
+  --threadsmax			Maximum number of threads for our GPU worker
+  --threadsmin			Minimum number of threads for our GPU worker
+  --threadsstep			The steps we should increment our thread count with each iteration (default: 1)
 
-  --blocksmax,				Maximum number of blocks for our GPU worker
-  --blocksmin,				Minimum number of blocks for our GPU worker
-  --blocksstep,				The steps we should increment our block count with each iteration (default: 1)
+  --blocksmax			Maximum number of blocks for our GPU worker
+  --blocksmin			Minimum number of blocks for our GPU worker
+  --blocksstep			The steps we should increment our block count with each iteration (default: 1)
 
-  --affinity, 				The CPU core that we should tie our GPU worker to (default: 0)
-  --bsleep,					The value for bsleep in our GPU worker (default: 25)
-  --bfactor,				The value for bfactor in our GPU worker (default: 12)
+  --affinity			The CPU core that we should tie our GPU worker to (default: 0)
+  --bsleep				The value for bsleep in our GPU worker (default: 25)
+  --bfactor				The value for bfactor in our GPU worker (default: 12)
 ```
 
 ### Usage Examples

@@ -9,7 +9,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib.pyplot as plt
 import util
-from subprocess import Popen, CREATE_NEW_CONSOLE
+import signal
+from subprocess import Popen
 #
 #
 #	P I C K A X E  C O N F I G  G E N E R A T O R
@@ -53,7 +54,9 @@ class PickaxeConfigAssistant():
 		self.path_xmrig_root_nvidia = ".{}xmrig-nvidia{}".format(os.sep, os.sep)
 		util.mkdir(self.path_xmrig_root_nvidia)
 		self.path_logs_folder = ".{}logs{}".format(os.sep, os.sep)
-		self.filename_xmrig_exe = "xmrig-nvidia.exe"
+		self.filename_xmrig_exe = "xmrig-nvidia"
+		if os.name == 'nt':
+			self.filename_xmrig_exe += ".exe"
 		self.filename_xmrig_config = "config.json"
 		self.filename_xmrig_log = "log.txt"
 		self.path_results_folder = ".{}analysis{}{}{}".format(os.sep, os.sep, util.random_string(8), os.sep)
@@ -350,12 +353,18 @@ class PickaxeConfigAssistant():
 		# 
 		#
 		#print("STARTING XMRIG")
-		mining = Popen(cmd_string, creationflags=CREATE_NEW_CONSOLE, shell=False)
+		mining = Popen(cmd_string, shell=False)
 		#print("SLEEPING")
 		time.sleep(self.benchmark_mining_seconds)
 		#print("KILLING XMRIG")
 		#cmd_kill_string = 'taskkill /f /IM "xmrig-nvidia.exe"'
-		mining.kill()
+		#mining.kill()
+		if os.name == 'nt':
+			mining.kill()
+		else:
+			#
+			#	Linux, end using os.kill
+			os.kill(mining.pid, signal.SIGKILL)
 		#Popen(cmd_kill_string, shell=False)
 		return True
 	
@@ -480,6 +489,6 @@ class PickaxeConfigAssistant():
 				ha='center', va='bottom')
 
 		#fig.show()
-		print("Saving graph to: {}".format(filfile_nameename))
+		print("Saving graph to: {}".format(file_name))
 		fig.savefig(file_name, facecolor=self.background_colour, transparent=True)
 

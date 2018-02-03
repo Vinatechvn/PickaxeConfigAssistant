@@ -3,6 +3,8 @@ Pickaxe Config Assistant (PCA) is a Python based script that can run [xmrig-nvid
 
 After completing a run of XMRig using the current configuration, a JSON file is created containing the information about that run. Once all runs have been completed, a graph of the total results is created.
 
+_Note, the `master` branch contains the most stable build available._
+
 
 #### Table of contents
 * [Features](#features)

@@ -477,22 +477,22 @@ class PickaxeConfigAssistant():
 		#	Apply our labels
 		for rect in rectangles_max:
 			height = rect.get_height()
-			ax.text(rect.get_x() + rect.get_width()/2., 0.95*height,
+			ax.text(rect.get_x() + rect.get_width()/2., 0.30*height,
 				'Max\n%d' % int(height) + "H/s",
 				ha='center', va='bottom')
 		for rect in rectangles_min:
 			height = rect.get_height()
-			ax.text(rect.get_x() + rect.get_width()/2., 0.95*height,
+			ax.text(rect.get_x() + rect.get_width()/2., 0.60*height,
 				'Min\n%d' % int(height) + "H/s",
 				ha='center', va='bottom')
 		for rect in rectangles_average:
 			height = rect.get_height()
-			ax.text(rect.get_x() + rect.get_width()/2., 0.95*height,
+			ax.text(rect.get_x() + rect.get_width()/2., 0.90*height,
 				'Avg\n%d' % int(height) + "H/s",
 				ha='center', va='bottom')
 		for rect in rectangles_wattage:
 			height = rect.get_height()
-			ax.text(rect.get_x() + rect.get_width()/2., 0.95*height,
+			ax.text(rect.get_x() + rect.get_width()/2., 0.5*height,
 				'Power\n%d' % int(height) + "W",
 				ha='center', va='bottom')
 

@@ -1,9 +1,0 @@
-[2018-02-03 17:28:50]  * VERSIONS:     XMRig/2.4.2 libuv/1.14.1 CUDA/8.0 MSVC/2015
-[2018-02-03 17:28:50]  * CPU:          AMD FX(tm)-6300 Six-Core Processor              (1) x64 AES-NI
-[2018-02-03 17:28:50]  * GPU #0:       GeForce GTX 750 Ti @ 1150/2700 MHz 30x8 12x25 arch:50 SMX:5
-[2018-02-03 17:28:50]  * ALGO:         cryptonight, donate=1%
-[2018-02-03 17:28:50]  * POOL #1:      pool.supportxmr.com:7777
-[2018-02-03 17:28:50]  * COMMANDS:     'h' hashrate, 'e' health, 'p' pause, 'r' resume
-[2018-02-03 17:28:50] Ctrl+C received, exiting
-[2018-02-03 17:28:51] Ctrl+C received, exiting
-[2018-02-03 17:28:51] Ctrl+C received, exiting

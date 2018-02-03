@@ -495,7 +495,6 @@ class PickaxeConfigAssistant():
 			ax.text(rect.get_x() + rect.get_width()/2., 0.5*height,
 				'Power\n%d' % int(height) + "W",
 				ha='center', va='bottom')
-
 		#fig.show()
 		print("Saving graph to: {}".format(file_name))
 		fig.savefig(file_name, facecolor=self.background_colour, transparent=True)

@@ -5,7 +5,6 @@ import json
 import time
 import re
 import random
-import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib.pyplot as plt
 import util
@@ -16,17 +15,17 @@ from subprocess import Popen
 #	P I C K A X E  C O N F I G  G E N E R A T O R
 #	Pickaxe Config Assistant
 #
-#	A class that can run an instance of XMRig, analyise the log and save into a json
+#	A class that can run an instance of XMRig, analyse the log and save into a json
 #	file. This json file is then graphed using matplotlib and saved as a png file.
 #
-#	Configurable through the config.json file.
+#	TODO Use a config.json file to hand in args.
 #
 class PickaxeConfigAssistant():
 	#
 	#	Constructor
 	def __init__(self, **kwargs):
 		print("Creating new PickaxeConfigAssistant()")
-		self.mode = {"mining_software":"XMRig", "gpu_type":"nVidia"}
+		self.mode = {"mining_software":"xmrig", "gpu_type":"nvidia"}
 		self.gpu_name = "GPU #0"
 		self.gpu_clocks = {"core":0, "memory":0}
 		self.version_number = 129376
@@ -203,6 +202,15 @@ class PickaxeConfigAssistant():
 				self.thread_count = self.thread_count_min
 				self.block_count += self.block_count_step
 		return self.is_continue
+
+
+
+
+
+
+
+
+
 
 	#
 	#	X M R I G  C O N F I G  F U N C T I O N S

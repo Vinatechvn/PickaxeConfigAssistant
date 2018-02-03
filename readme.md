@@ -36,10 +36,8 @@ After completing a run of XMRig using the current configuration, a JSON file is 
 
 
 ## Installation
-1. Have Python3+ installed, install the following packages:
+1. Have Python3+ installed, install the following package:
     * `pip install matplotlib`
-    * `pip install requests`
-    * `pip install unidecode`
 2. Download the release version of [xmrig-nvidia](https://github.com/xmrig/xmrig-nvidia/releases) for your OS.
 3. Clone this repository `git clone https://github.com/PentagonalCube/PickaxeConfigAssistant.git`.
 4. Copy the `xmrig-nvidia` executable file from the XMRig release and paste it into the `PickaxeConfigAssistant/xmrig-nvidia/` folder.

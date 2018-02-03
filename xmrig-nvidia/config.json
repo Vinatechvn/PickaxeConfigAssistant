@@ -28,7 +28,7 @@
             "blocks": 8,
             "bfactor": 12,
             "bsleep": 25,
-            "affine_to_cpu": 0
+            "affine_to_cpu": "0"
         }
     ]
 }

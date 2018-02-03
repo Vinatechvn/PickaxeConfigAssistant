@@ -24,7 +24,7 @@ def main(argv):
 		)
 	except getopt.GetoptError:
 		print()
-		print('test.py -i <inputfile> -o <outputfile>')
+		print('Usage error, please check the input syntax and try again.\nSee https://github.com/PentagonalCube/PickaxeConfigAssistant#usage for Usage Examples.\n')
 		sys.exit(2)
 	for opt, arg in opts:
 		if opt == '-help':

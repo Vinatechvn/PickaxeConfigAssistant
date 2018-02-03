@@ -29,7 +29,7 @@ class PickaxeConfigAssistant():
 		self.mode = {"mining_software":"XMRig", "gpu_type":"nVidia"}
 		self.gpu_name = "GPU #0"
 		self.gpu_clocks = {"core":0, "memory":0}
-		self.version_number = 126327
+		self.version_number = 129376
 		#
 		#	Settings for XMRig
 		self.index = kwargs.get("index", 0)

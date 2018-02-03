@@ -37,13 +37,13 @@ After completing a run of XMRig using the current configuration, a JSON file is 
 
 ## Installation
 1. Have Python3+ installed, install the following packages:
-    1. `pip install matplotlib`
-    1. `pip install requests`
-    1. `pip install unidecode`
+    * `pip install matplotlib`
+    * `pip install requests`
+    * `pip install unidecode`
 2. Download the release version of [xmrig-nvidia](https://github.com/xmrig/xmrig-nvidia/releases) for your OS.
 3. Clone this repository `git clone https://github.com/PentagonalCube/PickaxeConfigAssistant.git`.
 4. Copy the `xmrig-nvidia` executable file from the XMRig release and paste it into the `PickaxeConfigAssistant/xmrig-nvidia/` folder.
-    On Linux you'll need to compile the XMRig source code before you can copy it, see their instructions on [compiling XMRig](https://github.com/xmrig/xmrig-nvidia/wiki/Ubuntu-Build)
+    * On Linux you'll need to compile the XMRig source code before you can copy it, see their instructions on [compiling XMRig](https://github.com/xmrig/xmrig-nvidia/wiki/Ubuntu-Build)
 5. Use Python3+ to run the `PickaxeConfigAssistant/main.py` file (`python3 main.py < **args >`) and hand in the arguments from the list below in order to configure it to your requirements.
 
 
@@ -71,22 +71,22 @@ main.py --index 3 --threads 8 --threadsmax 192 --threadsstep 8 --blocks 8 --seco
 
 ### Command line options
 ```
-  --seconds     The length of time in seconds we will run XMRig for (default: 42)
+  --seconds         The length of time in seconds we will run XMRig for (default: 42)
 
-  --threads       The number of threads to have in our GPU worker (default: 8)
-  --blocks      The number of blocks to have in our GPU worker (default: 1)
+  --threads         The number of threads to have in our GPU worker (default: 8)
+  --blocks          The number of blocks to have in our GPU worker (default: 1)
 
   --threadsmax      Maximum number of threads for our GPU worker
   --threadsmin      Minimum number of threads for our GPU worker
   --threadsstep     The steps we should increment our thread count with each iteration (default: 1)
 
-  --blocksmax     Maximum number of blocks for our GPU worker
-  --blocksmin     Minimum number of blocks for our GPU worker
+  --blocksmax       Maximum number of blocks for our GPU worker
+  --blocksmin       Minimum number of blocks for our GPU worker
   --blocksstep      The steps we should increment our block count with each iteration (default: 1)
 
-  --affinity      The CPU core that we should tie our GPU worker to (default: 0)
-  --bsleep      The value for bsleep in our GPU worker (default: 25)
-  --bfactor     The value for bfactor in our GPU worker (default: 12)
+  --affinity        The CPU core that we should tie our GPU worker to (default: 0)
+  --bsleep          The value for bsleep in our GPU worker (default: 25)
+  --bfactor         The value for bfactor in our GPU worker (default: 12)
 ```
 
 

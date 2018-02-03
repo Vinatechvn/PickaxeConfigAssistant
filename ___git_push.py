@@ -11,6 +11,6 @@ commit_message = input()
 cmd_string = prefix + 'git commit -m "{}"'.format(commit_message)
 cmd = Popen(cmd_string, shell=True, cwd=cwd)
 cmd_string = prefix + "git push origin dev"
-cmd = Popen(cmd_string, shell=True, cwd=cwd)
+cmd = Popen(cmd_string, shell=False, cwd=cwd)
 #
 #	Some login stuff from git

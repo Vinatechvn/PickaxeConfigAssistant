@@ -1,0 +1,33 @@
+{
+    "background": false,
+    "threads": [
+        {
+            "affine_to_cpu": 0,
+            "index": 0,
+            "worksize": 8,
+            "intensity": 256
+        }
+    ],
+    "retry-pause": 5,
+    "print-time": 1,
+    "algo": "cryptonight",
+    "retries": 5,
+    "donate-level": 1,
+    "pools": [
+        {
+            "pass": "TEST:mun@kerbin.xyz",
+            "keepalive": true,
+            "user": "44tS9Hxcadqg8g4Vy8Tfxt7s41ktiXe2dHetBmuDA3UtX9bWhx6bHbw5E6XnkB69mZfk1GEzb6TVLX68CgirCcebFpVDRoX",
+            "nicehash": false,
+            "url": "pool.supportxmr.com:7777"
+        }
+    ],
+    "log-file": ".\\logs\\log.txt",
+    "colors": true,
+    "opencl-platform": 1,
+    "api": {
+        "worker-id": null,
+        "port": 0,
+        "access-token": null
+    }
+}

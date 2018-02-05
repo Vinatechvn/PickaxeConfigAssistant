@@ -11,16 +11,28 @@ def main(argv):
 	seconds = 42
 	thread_count, thread_count_step, thread_count_min, thread_count_max = 1, 1, 1, 1
 	block_count, block_count_step, block_count_min, block_count_max = 1, 1, 1, 1
+	intensity = 64
+	worksize = 4
+	intensity_step, intensity_min, intensity_max = 16, 1, 1
+	worksize_step, worksize_min, worksize_max = 1, 1, 1
 	bfactor = 12
 	bsleep = 25
 	affine_to_cpu = 0
-	thread_count = 8
+	worker_threads = 1
+	mode = "nvidia"
 
 
 	try:
 		opts, args = getopt.getopt(argv,
-			"i:s:t:b:tmax:tmin:tstep:bmax:bmin:bstep:bsleep:bfactor:affinity",
-			["index=","seconds=","threads=", "blocks=","threadsmax=", "threadsmin=","threadsstep=","blocksmax=","blocksmin=","blocksstep=","bsleep=","bfactor=","affinity="]
+			"i:s:t:b:tmax:tmin:tstep:bmax:bmin:bstep:bsleep:bfactor:affinity:in:inmax:inmin:instep:ws:wsmax:wsmin:wsstep:wt:m",
+			["index=","seconds=",
+			"threads=", "blocks=",
+			"threadsmax=", "threadsmin=","threadsstep=",
+			"blocksmax=","blocksmin=","blocksstep=",
+			"bsleep=","bfactor=","affinity=", 
+			"intensity=", "intensitymax=", "intensitymin=", "intensitystep=",
+			"worksize=", "worksizemax=", "worksizemin=", "worksizestep=",
+			"workerthreads=", "mode="]
 		)
 	except getopt.GetoptError:
 		print()
@@ -39,6 +51,10 @@ def main(argv):
 		elif opt in ("-s", "--seconds"):
 			seconds = int(arg.strip())
 		#
+		#	GPU mode
+		elif opt in ("-m", "--mode"):
+			mode = arg.strip()
+		#
 		#	Number of threads to have in our XMRig GPU worker thread
 		elif opt in ("-t", "--threads"):
 			thread_count = int(arg.strip())
@@ -50,6 +66,18 @@ def main(argv):
 			block_count = int(arg.strip())
 			block_count_min = block_count
 			block_count_max = block_count
+		#
+		#	Number of intensity to have in our XMRig GPU worker thread
+		elif opt in ("-in", "--intensity"):
+			intensity = int(arg.strip())
+			intensity_max = intensity
+			intensity_min = intensity
+		#
+		#	Number of worksize to have in our XMRig GPU worker thread
+		elif opt in ("-ws", "--worksize"):
+			worksize = int(arg.strip())
+			worksize_min = worksize
+			worksize_max = worksize
 		#
 		#	Max/Min/Steps for our threads
 		elif opt in ("-tmax", "--threadsmax"):
@@ -67,6 +95,22 @@ def main(argv):
 		elif opt in ("-bstep", "--blocksstep"):
 			block_count_step = int(arg.strip())
 		#
+		#	Max/Min/Steps for our intensity
+		elif opt in ("-inmax", "--intensitymax"):
+			intensity_max = int(arg.strip())
+		elif opt in ("-inmin", "--intensitymin"):
+			intensity_min = int(arg.strip())
+		elif opt in ("-instep", "--intensitystep"):
+			intensity_step = int(arg.strip())
+		#
+		#	Max/Min/Steps for our worksize
+		elif opt in ("-wsmax", "--worksizemax"):
+			worksize_maxi = int(arg.strip())
+		elif opt in ("-wsmin", "--worksizemin"):
+			worksize_min = int(arg.strip())
+		elif opt in ("-wsstep", "--worksizestep"):
+			worksize_step = int(arg.strip())
+		#
 		#	Map this process to a specific CPU core?
 		elif opt in ("-affinity", "--affinity"):
 			affine_to_cpu = arg.strip()
@@ -78,6 +122,10 @@ def main(argv):
 		#	Level of aggression when getting tome on the kernel?
 		elif opt in ("-bfactor", "--bfactor"):
 			bfactor = int(arg.strip())
+		#
+		#	-
+		elif opt in ("-th", "--workerthreads"):
+			worker_threads = int(arg.strip())
 
 	#
 	#	With all of these settings, let's generate our Pickaxe object
@@ -88,10 +136,12 @@ def main(argv):
 		thread_count_max=thread_count_max, thread_count_step=thread_count_step,
 		block_count=block_count, block_count_min=block_count_min, 
 		block_count_max=block_count_max, block_count_step=block_count_step,
-		affine_to_cpu=affine_to_cpu, bfactor=bfactor, bsleep=bsleep
+		affine_to_cpu=affine_to_cpu, bfactor=bfactor, bsleep=bsleep,
+		intensity=intensity, worksize=worksize,
+		intensity_max=intensity_max, intensity_min=intensity_min, intensity_step=intensity_step,
+		worksize_max=worksize_max, worksize_min=worksize_min, worksize_step=worksize_step,
+		worker_threads=worker_threads, mode=mode
 	)
-	#print(pca)
-
 	#
 	#	R U N 
 	pca.run_analysis()

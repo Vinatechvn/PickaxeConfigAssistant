@@ -2,6 +2,7 @@ xmrig-nvidia/___archive/
 xmrig-nvidia/cuda8/
 xmrig-nvidia/start.cmd
 xmrig-nvidia/xmrig-nvidia.exe
+xmrig-amd/xmrig-amd.exe
 __pycache__/
 ___archive/
 TEST_1.png

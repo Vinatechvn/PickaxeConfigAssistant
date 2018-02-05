@@ -121,6 +121,8 @@ AMD:
   --worksizemax     Maximum worksize for our GPU worker
   --worksizemin     Minimum worksize for our GPU worker
   --worksizestep    The value we should increment our worksize by with each iteration (default: 1)
+
+  --workerthreads   The number of worker threads to run on this GPU (clones current configuration into _n_ threads), (default: 1)
 ```
 
 

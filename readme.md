@@ -74,9 +74,14 @@ main.py --index 3 --threads 8 --threadsmax 192 --threadsstep 8 --blocks 8 --seco
 ## Usage - AMD
 The usage is pretty the same as for Nvidia, but for AMD our threads/blocks become intensity/worksize.
 
-Default benchmark timing for a single setting [30x8] on a system with only 1 GPU (or GPU #0 is our target):
+Default benchmark timing for a single setting [256x8] on a system with only 1 GPU (or GPU #0 is our target):
 ```
 main.py --intensity 256 --worksize 8
+```
+
+We can also use multiple threads for our workers when we have an AMD card [ 256x8, 256x8 ]:
+```
+main.py --intensity 256 --worksize 8 --workerthreads 2
 ```
 
 The other values work in the same way, a 42 second benchmark for the XMRig settings [256x8, 512x8, 256x9, 512x9]

@@ -46,7 +46,7 @@ class PickaxeConfigAssistant():
 		self.worksize_min = kwargs.get("worksize_min", self.worksize)
 		self.worksize_max = kwargs.get("worksize_max", self.worksize)
 		self.worksize_step = kwargs.get("worksize_step", 1)
-		self.num_of_threads = kwargs.get("num_of_threads", 1)
+		self.worker_threads = kwargs.get("worker_threads", 1)
 		#
 		#	NVIDIA XMRig Settings
 		self.thread_count = kwargs.get("thread_count", 1)
@@ -246,7 +246,7 @@ class PickaxeConfigAssistant():
 				"worksize": self.worksize,
 				"affine_to_cpu": self.affine_to_cpu
 			}
-			for i in range(0, self.num_of_threads):
+			for i in range(0, self.worker_threads):
 				thread_objects.append(thread_obj)
 		#
 		#	Returns a list
@@ -537,6 +537,9 @@ class PickaxeConfigAssistant():
 				x_string = "Threads: {}\nBlocks: {}".format(data["threads"], data["blocks"])
 			if self.mode["gpu_type"] == "amd":
 				x_string = "Intensity: {}\nWork Size: {}".format(data["intensity"], data["worksize"])
+			if self.worker_threads > 1:
+				x_string = "{} (x{})\n{} (x{})".format(x_string.split("\n")[0], self.worker_threads,
+					x_string.split("\n")[1], self.worker_threads)
 			x.append(x_string)
 
 			y_string = data["max"]

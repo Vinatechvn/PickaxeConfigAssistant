@@ -70,23 +70,33 @@ main.py --index 1 --threads 28 --threadsmax 32 --threadsstep 4 --blocks 9 --bloc
 main.py --index 3 --threads 8 --threadsmax 192 --threadsstep 8 --blocks 8 --seconds 22
 ```
 
+It's also possible to run specific benchmarks of given settings using the `--runs "[AxB, AxB]"` argument:
+```
+main.py --runs "[8x2, 16x2, 32x2, 64x2]"
+```
+
 
 ## Usage - AMD
 The usage is pretty the same as for Nvidia, but for AMD our threads/blocks become intensity/worksize.
 
 Default benchmark timing for a single setting [256x8] on a system with only 1 GPU (or GPU #0 is our target):
 ```
-main.py --intensity 256 --worksize 8
+main.py --mode amd --intensity 256 --worksize 8
 ```
 
 We can also use multiple threads for our workers when we have an AMD card [ 256x8, 256x8 ]:
 ```
-main.py --intensity 256 --worksize 8 --workerthreads 2
+main.py --mode amd --intensity 256 --worksize 8 --workerthreads 2
 ```
 
 The other values work in the same way, a 42 second benchmark for the XMRig settings [256x8, 512x8, 256x9, 512x9]
 ```
-main.py --intensity 256 --worksize 8 --intensitymax 512 --worksizemax 9 --intensitystep 256 --worksizestep 1
+main.py --mode amd --intensity 256 --worksize 8 --intensitymax 512 --worksizemax 9 --intensitystep 256 --worksizestep 1
+```
+
+It's also possible to run specific benchmarks of given settings using the `--runs "[AxB, AxB]"` argument:
+```
+main.py --mode amd --runs "[128x2, 128x4, 128x8, 256x8]"
 ```
 
 ### Command line options
@@ -97,6 +107,10 @@ main.py --intensity 256 --worksize 8 --intensitymax 512 --worksizemax 9 --intens
   --affinity        The CPU core that we should tie our GPU worker to (default: 0)
   --bsleep          The value for bsleep in our GPU worker (default: 25)
   --bfactor         The value for bfactor in our GPU worker (default: 12)
+
+  --runs            A way to run benchmarks of specific threads/blocks / intensity/height.
+                        Example: "[30x3, 30x4]" would run the benchmarks for threads at 3, and then
+                                 blocks at 3 & 4 - two runs in total.
 
 Nvidia:
   --threads         The number of threads to have in our GPU worker (default: 8)

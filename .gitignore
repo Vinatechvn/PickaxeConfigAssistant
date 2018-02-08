@@ -5,4 +5,7 @@ xmrig-nvidia/xmrig-nvidia.exe
 xmrig-amd/xmrig-amd.exe
 __pycache__/
 ___archive/
+docs/
+tests/
 TEST_1.png
+analysis/

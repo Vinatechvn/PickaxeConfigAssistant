@@ -10,6 +10,9 @@ import matplotlib.pyplot as plt
 import util
 import signal
 from subprocess import Popen
+import subprocess
+import sys
+
 #
 #
 #	P I C K A X E  C O N F I G  G E N E R A T O R
@@ -24,14 +27,15 @@ class PickaxeConfigAssistant():
 	#
 	#	Constructor
 	def __init__(self, **kwargs):
-		print("Creating new PickaxeConfigAssistant()")
+		self.version_number = 142662
+		print("Creating new PickaxeConfigAssistant() | Version: {}".format(self.version_number))
 		self.mode = {"mining_software":"xmrig", "gpu_type":"nvidia"}
 		#
 		#	Read our gpu type input
 		self.mode["gpu_type"] = kwargs.get("mode", "nvidia")
 		self.gpu_name = "GPU #0"
 		self.gpu_clocks = {"core":0, "memory":0}
-		self.version_number = 142662
+		
 		#
 		#	Settings for XMRig
 		self.index = kwargs.get("index", 0)		
@@ -159,7 +163,10 @@ class PickaxeConfigAssistant():
 					self.worksize, self.intensity, self.worksize))
 			#
 			#	Start XMRig using subprocess
-			self.run_xmrig()
+			xmrig_status = self.run_xmrig()
+			#
+			#	Did XMRig run ok?
+			#if xmrig_status != False:
 			#
 			#	Update our GPU Name if it is not already set
 			if is_first_iteration:
@@ -457,7 +464,15 @@ class PickaxeConfigAssistant():
 	#
 	#	Run an instance of XMRig and then quit after 42 seconds
 	def run_xmrig(self):
-		print(self.mode)
+		ran_successfully = True
+		#
+		#	Handle errors in XMRig, wait and see if the log continues to update
+		xmrig_health_timeout_seconds = 3
+		xmrig_benchmark_seconds = self.benchmark_mining_seconds - xmrig_health_timeout_seconds
+		if xmrig_benchmark_seconds < 0:
+			xmrig_benchmark_seconds = 0
+		#
+		#	Assemble the cmd string
 		if self.mode["gpu_type"] == "nvidia":
 			cmd_string = self.path_xmrig_root_nvidia + self.filename_xmrig_exe_nvidia
 		if self.mode["gpu_type"] == "amd":
@@ -465,7 +480,22 @@ class PickaxeConfigAssistant():
 		#
 		#	Create a subprocess to run on the OS within our current context
 		mining = Popen(cmd_string, shell=False)
-		time.sleep(self.benchmark_mining_seconds)
+		#
+		#	Need a nonblocking way to check in realtime. For now let's use the log.
+		#	No results within 4 seconds means something's wrong as it is hanging on an error
+		time.sleep(4)
+		xmrrig_log_file_contents = util.read_file(self.get_xmrig_log_file_path())
+		#print(xmrrig_log_file_contents)
+		time.sleep(xmrig_health_timeout_seconds)
+		if xmrrig_log_file_contents == util.read_file(self.get_xmrig_log_file_path()):
+			#
+			#	Log didn't change
+			error_string = "\n! XMRig failed to start on the card, skipping this benchmark...\n"
+			print(error_string)
+			ran_successfully = False
+		
+		if ran_successfully:
+			time.sleep(xmrig_benchmark_seconds)
 		if os.name == 'nt':
 			#
 			#	Windows, this works well to end the process
@@ -474,7 +504,10 @@ class PickaxeConfigAssistant():
 			#
 			#	Linux, end using os.kill
 			os.kill(mining.pid, signal.SIGKILL)
-		return True
+		return ran_successfully
+
+	
+		
 
 
 
@@ -622,5 +655,6 @@ class PickaxeConfigAssistant():
 		#fig.show()
 		print("Saving graph to: {}".format(file_name))
 		fig.savefig(file_name, facecolor=self.background_colour, transparent=True)
+
 
 

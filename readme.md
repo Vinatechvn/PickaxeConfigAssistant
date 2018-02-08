@@ -1,7 +1,7 @@
 # Pickaxe Config Assistant
 Pickaxe Config Assistant (PCA) is a Python based script that can run [xmrig-nvidia](https://github.com/xmrig/xmrig-nvidia) or [xmrig-amd](https://github.com/xmrig/xmrig-amd) for a set period of time and then analyse what hashrate the configuration achieved. The configuration is handed into the application at runtime and then the number of threads/blocks in the config is iterated through until reaching the `threadsmax/intensitymax` and `blocksmax/worksizemax` values (Nvidia/AMD arguments).
 
-It's also possible to run PCA using a string list of given arguments for `threads/blocks` / `intensity/worksize` using the `--runs [AxB, AxB]` argument. Using this input it's possible to quickly generate benchmark data for specific known configurations.
+It's also possible to run PCA using a string list of given arguments for `threads/blocks` / `intensity/worksize` using the `--runs "[AxB, AxB]"` argument. Using this input it's possible to quickly generate benchmark data for specific known configurations.
 
 After completing a run of XMRig using the current configuration, a JSON file is created containing the information about that run. Once all runs have been completed, a graph of the total results is created.
 

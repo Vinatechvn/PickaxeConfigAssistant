@@ -534,6 +534,7 @@ class PickaxeConfigAssistant():
 	#	Generate a list of the data objects we'll need to render a graph
 	def generate_graph_data(self):
 		graph_data = []
+		
 		for f_o in self.ANALYSIS_OBJECTS:
 			#
 			#	As we always clone worker threads, we can take element 0 here
@@ -552,6 +553,7 @@ class PickaxeConfigAssistant():
 			graph_object["average"] = f_o["analysis"]["average_hash_rate"]
 			graph_object["wattage"] = f_o["analysis"]["average_wattage"]
 			graph_data.append(graph_object)
+		
 		return graph_data
 	#
 	#	Use matplotlib to create and save the graph using given input data
@@ -564,6 +566,10 @@ class PickaxeConfigAssistant():
 		#
 		#	x -> = threads | blocks
 		#	y ^^ = hashrate
+		graph_data_limit = 100
+		if len(graph_data) >= graph_data_limit:
+			print("WARNING: Too many data points to graph, I'll only graph the first {} analyses.".format(graph_data_limit))
+			graph_data = graph_data[:graph_data_limit]
 
 		for data in graph_data:
 			if self.mode["gpu_type"] == "nvidia":

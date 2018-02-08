@@ -27,7 +27,7 @@ class PickaxeConfigAssistant():
 	#
 	#	Constructor
 	def __init__(self, **kwargs):
-		self.version_number = 142662
+		self.version_number = 142732
 		print("Creating new PickaxeConfigAssistant() | Version: {}".format(self.version_number))
 		self.mode = {"mining_software":"xmrig", "gpu_type":"nvidia"}
 		#

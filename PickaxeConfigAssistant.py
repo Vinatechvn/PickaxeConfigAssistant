@@ -35,7 +35,10 @@ class PickaxeConfigAssistant():
 		self.mode["gpu_type"] = kwargs.get("mode", "nvidia")
 		self.gpu_name = "GPU #0"
 		self.gpu_clocks = {"core":0, "memory":0}
-		
+		#
+		#	A mechanism to hand in specific runs
+		self.runs = kwargs.get("runs", [])
+		self.run_counter = 0
 		#
 		#	Settings for XMRig
 		self.index = kwargs.get("index", 0)		
@@ -63,6 +66,9 @@ class PickaxeConfigAssistant():
 		self.block_count_max = kwargs.get("block_count_max", self.block_count)
 		self.thread_count_step = kwargs.get("thread_count_step", 1)
 		self.block_count_step = kwargs.get("block_count_step", 1)
+		#
+		#	Initialise using runs (only runs if we have runs to use)
+		self.initialise_through_runs_variable()
 		#
 		#	Settings for the main loop
 		self.benchmark_mining_seconds = kwargs.get("benchmark_mining_seconds", 42)
@@ -111,6 +117,26 @@ class PickaxeConfigAssistant():
 	#	Represent the current thread_string data as our print()
 	def __str__(self):
 		return json.dumps(self.generate_thread_setting_object())
+
+	#
+	#	Initialise using the runs input
+	def initialise_through_runs_variable(self):
+		self.run_counter = 0
+		if self.runs != []:
+			#
+			#	We need to program these runs, so using the first one
+			self.update_next_benchmark_settings_using_runs()
+
+	#
+	#	Update our settings from our next run object
+	def update_next_benchmark_settings_using_runs(self):
+		if self.mode["gpu_type"] == "nvidia":
+			self.thread_count = self.runs[self.run_counter]["a"]
+			self.block_count = self.runs[self.run_counter]["b"]
+		if self.mode["gpu_type"] == "amd":
+			self.intensity = self.runs[self.run_counter]["a"]
+			self.worksize = self.runs[self.run_counter]["b"]
+		self.run_counter += 1
 
 	#
 	#	Get the total number of loops the application will be active for
@@ -209,7 +235,21 @@ class PickaxeConfigAssistant():
 			util.write_file(self.get_xmrig_log_file_path(), "")
 			#
 			#	End of the loop, let's update our config and check all the rules
-			self.continue_this_computation()
+			if self.runs != []:
+				#
+				#	Update using runs
+				if self.run_counter == len(self.runs):
+					#
+					#	End, break this loop
+					self.is_continue = False
+				else:
+					#
+					#	We still have more runs, let's continue
+					self.update_next_benchmark_settings_using_runs()
+			else:
+				#
+				#	Update using the next iteration
+				self.continue_this_computation()
 
 
 
@@ -661,6 +701,3 @@ class PickaxeConfigAssistant():
 		#fig.show()
 		print("Saving graph to: {}".format(file_name))
 		fig.savefig(file_name, facecolor=self.background_colour, transparent=True)
-
-
-

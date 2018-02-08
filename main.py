@@ -20,11 +20,12 @@ def main(argv):
 	affine_to_cpu = 0
 	worker_threads = 1
 	mode = "nvidia"
+	runs = []
 
 
 	try:
 		opts, args = getopt.getopt(argv,
-			"i:s:t:b:tmax:tmin:tstep:bmax:bmin:bstep:bsleep:bfactor:affinity:in:inmax:inmin:instep:ws:wsmax:wsmin:wsstep:wt:m",
+			"i:s:t:b:tmax:tmin:tstep:bmax:bmin:bstep:bsleep:bfactor:affinity:in:inmax:inmin:instep:ws:wsmax:wsmin:wsstep:wt:m:r",
 			["index=","seconds=",
 			"threads=", "blocks=",
 			"threadsmax=", "threadsmin=","threadsstep=",
@@ -32,7 +33,7 @@ def main(argv):
 			"bsleep=","bfactor=","affinity=", 
 			"intensity=", "intensitymax=", "intensitymin=", "intensitystep=",
 			"worksize=", "worksizemax=", "worksizemin=", "worksizestep=",
-			"workerthreads=", "mode="]
+			"workerthreads=", "mode=", "runs="]
 		)
 	except getopt.GetoptError:
 		print()
@@ -123,9 +124,27 @@ def main(argv):
 		elif opt in ("-bfactor", "--bfactor"):
 			bfactor = int(arg.strip())
 		#
-		#	-
+		#	The number of threads to run in parallel (AMD) (cloned threads)
 		elif opt in ("-th", "--workerthreads"):
 			worker_threads = int(arg.strip())
+		#
+		#	A way to give specific inputs into the application "[80x3, 60x8, 20x2]"
+		#	Must be a string input
+		elif opt in ("-r", "--runs"):
+			runs = arg.strip()
+			runs = runs.replace("[", "")
+			runs = runs.replace("]", "")
+			runs = runs.split(",")
+			all_runs = []
+			for run in runs:
+				a = int(run.split("x")[0].strip())
+				b = int(run.split("x")[1].strip())
+				all_runs.append({
+					"a": a,
+					"b": b
+				})
+			runs = all_runs
+
 
 	#
 	#	With all of these settings, let's generate our Pickaxe object
@@ -140,7 +159,7 @@ def main(argv):
 		intensity=intensity, worksize=worksize,
 		intensity_max=intensity_max, intensity_min=intensity_min, intensity_step=intensity_step,
 		worksize_max=worksize_max, worksize_min=worksize_min, worksize_step=worksize_step,
-		worker_threads=worker_threads, mode=mode
+		worker_threads=worker_threads, mode=mode, runs=runs
 	)
 	#
 	#	R U N 

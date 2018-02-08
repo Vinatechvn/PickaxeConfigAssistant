@@ -1,0 +1,27 @@
+{
+	"bar_width": 1,
+	"graph_width": 10,
+	"graph_height": 10,
+	"bars_per_dataset": 4,
+	"bars_separation": 0,
+	"colour_pallete": {
+		"background": "",
+		"bar_a": "",
+		"bar_b": "",
+		"bar_c": "",
+		"bar_d": "",
+		"bar_e": ""
+	},
+	"label_x": "X-Axis",
+	"label_y": "Y-Axis",
+	"dataset_x_axis": [
+		{
+			"": ""
+		}
+	],
+	"dataset_y_axis": [
+		[],
+		[]
+	]
+
+}

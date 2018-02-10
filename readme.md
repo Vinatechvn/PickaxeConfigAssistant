@@ -26,6 +26,10 @@ _Note, the `master` branch contains the most stable build available._
 
 ## Progress
 * ~~Basic graphing~~
+* Configurable graphing
+    * ~~Min/Max/Avg Hashrates,~~ ~~Wattage~~, Temperature
+    * Graph colouring
+    * Graph sizing
 * ~~XMRig Nvidia Support~~
 * ~~XMRig AMD Support~~
 * Simple data analysis saved as .json:
@@ -73,17 +77,19 @@ main.py --index 3 --threads 8 --threadsmax 192 --threadsstep 8 --blocks 8 --seco
 ```
 
 It's also possible to run specific benchmarks of given settings using the `--runs "[AxB, AxB]"` argument:
+The selected graph outputs here will only render the max/min/avg hashrate columns:
 ```
-main.py --runs "[8x2, 16x2, 32x2, 64x2]"
+main.py --runs "[8x2, 16x2, 32x2, 64x2]" --graph_datasets "[max, min, avg]"
 ```
 
 
 ## Usage - AMD
 The usage is pretty the same as for Nvidia, but for AMD our threads/blocks become intensity/worksize.
 
-Default benchmark timing for a single setting [256x8] on a system with only 1 GPU (or GPU #0 is our target):
+Default benchmark timing for a single setting [256x8] on a system with only 1 GPU (or GPU #0 is our target).
+The selected graph outputs here will only render the max/min hashrate columns:
 ```
-main.py --mode amd --intensity 256 --worksize 8
+main.py --mode amd --intensity 256 --worksize 8 --graph_datasets "[max, min]"
 ```
 
 We can also use multiple threads for our workers when we have an AMD card [ 256x8, 256x8 ]:
@@ -113,6 +119,11 @@ main.py --mode amd --runs "[128x2, 128x4, 128x8, 256x8]"
   --runs            A way to run benchmarks of specific threads/blocks / intensity/height.
                         Example: "[30x3, 30x4]" would run the benchmarks for threads at 3, and then
                                  blocks at 3 & 4 - two runs in total.
+
+Graphs:
+  --graph_datasets  A way to specify which datasets should be rendered in the graph.
+                        Example: "[max, avg]" will render the bars for max/avg hashrates for all benchmarks
+                        Inputs: "[max, min, avg, wattage]"
 
 Nvidia:
   --threads         The number of threads to have in our GPU worker (default: 8)

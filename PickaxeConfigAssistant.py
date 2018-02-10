@@ -12,6 +12,8 @@ import signal
 from subprocess import Popen
 import subprocess
 import sys
+from PickaxeGraphObject import *
+from PickaxeGraph import *
 
 #
 #
@@ -27,7 +29,8 @@ class PickaxeConfigAssistant():
 	#
 	#	Constructor
 	def __init__(self, **kwargs):
-		self.version_number = 142932
+		self.version_number = 154021
+		self.version_string = "PICKAXE-ALPHA-{}".format(self.version_number)
 		print("Creating new PickaxeConfigAssistant() | Version: {}".format(self.version_number))
 		self.mode = {"mining_software":"xmrig", "gpu_type":"nvidia"}
 		#
@@ -103,6 +106,9 @@ class PickaxeConfigAssistant():
 		self.bar_colour_min = "#F4828C"
 		self.bar_colour_average = "#775D6A"
 		self.bar_colour_wattage = "#ACBD86"
+		#
+		#	New Graph settings
+		self.graph_datasets = kwargs.get("graph_datasets", [])
 		#util.mkdir(self.path_results_folder)
 		#
 		#	Regex
@@ -141,19 +147,21 @@ class PickaxeConfigAssistant():
 	#
 	#	Get the total number of loops the application will be active for
 	def calculate_total_number_of_iterations(self):
-		if self.mode["gpu_type"] == "nvidia":
-			#
-			#	Handle Nvidia : threads & blocks
-			thread_loops = 1 + (self.thread_count_max / self.thread_count_step - self.thread_count_min / self.thread_count_step)
-			block_loops = 1 + (self.block_count_max / self.block_count_step - self.block_count_min / self.block_count_step)
-			return thread_loops * block_loops
-		if self.mode["gpu_type"] == "amd":
-			#
-			#	Handle AMD : intensity & work size
-			intensity_loops = 1 + (self.intensity_max / self.intensity_step - self.intensity_min / self.intensity_step)
-			worksize_loops = 1 + (self.worksize_max / self.worksize_step - self.worksize_min / self.worksize_step)
-			return intensity_loops * worksize_loops
-
+		if self.runs == []:
+			if self.mode["gpu_type"] == "nvidia":
+				#
+				#	Handle Nvidia : threads & blocks
+				thread_loops = 1 + (self.thread_count_max / self.thread_count_step - self.thread_count_min / self.thread_count_step)
+				block_loops = 1 + (self.block_count_max / self.block_count_step - self.block_count_min / self.block_count_step)
+				return thread_loops * block_loops
+			if self.mode["gpu_type"] == "amd":
+				#
+				#	Handle AMD : intensity & work size
+				intensity_loops = 1 + (self.intensity_max / self.intensity_step - self.intensity_min / self.intensity_step)
+				worksize_loops = 1 + (self.worksize_max / self.worksize_step - self.worksize_min / self.worksize_step)
+				return intensity_loops * worksize_loops
+		else:
+			return len(self.runs)
 	#
 	#	M A I N L I N E
 	#
@@ -169,23 +177,23 @@ class PickaxeConfigAssistant():
 		util.write_file(self.get_xmrig_log_file_path(), "")
 		#
 		#	Print estimated run time
-		estimated_run_time = self.benchmark_mining_seconds * self.calculate_total_number_of_iterations()
+		estimated_run_time = int(self.benchmark_mining_seconds * self.calculate_total_number_of_iterations())
 		print("Estimated run time: {} minutes".format(int(estimated_run_time / 60)))
 		#
 		#	While we are within the limits of all of our settings, iterate
 		is_first_iteration = True
 		while self.is_continue:
 			#
-			#	Save our config to the XMRis' config.txt
+			#	Save our config to the XMRigs' config.txt
 			self.update_xmrig_config_json_with_threads_object(
 				self.generate_thread_setting_object())
 			#
 			#	Run this computation with the given settings we just updated
 			if self.mode["gpu_type"] == "nvidia":
-				print("Starting XMRig-{} with threads:{} blocks:{} ({}x{})".format(self.mode["gpu_type"], self.thread_count, 
+				print("\nStarting XMRig-{} with threads:{} blocks:{} ({}x{})\n".format(self.mode["gpu_type"], self.thread_count, 
 					self.block_count, self.thread_count, self.block_count))
 			if self.mode["gpu_type"] == "amd":
-				print("Starting XMRig-{} with intensity:{} worksize:{} ({}x{})".format(self.mode["gpu_type"], self.intensity, 
+				print("\nStarting XMRig-{} with intensity:{} worksize:{} ({}x{})\n".format(self.mode["gpu_type"], self.intensity, 
 					self.worksize, self.intensity, self.worksize))
 			#
 			#	Start XMRig using subprocess
@@ -570,6 +578,17 @@ class PickaxeConfigAssistant():
 		#	Graph it and save
 		self.graph(self.generate_graph_data(), path)
 
+	def new_save_graph(self, path=""):
+		if path == "":
+			path = self.path_results_folder + "graph.png"
+		#
+		#	Save our data
+		#util.write_file(self.path_results_folder + "graph_data.json",
+		#	json.dumps(self.new_generate_graph_data()))
+		#
+		#	Graph it and save
+		self.new_graph(self.new_generate_graph_data(), path)
+
 	#
 	#	Generate a list of the data objects we'll need to render a graph
 	def generate_graph_data(self):
@@ -594,6 +613,45 @@ class PickaxeConfigAssistant():
 			graph_object["wattage"] = f_o["analysis"]["average_wattage"]
 			graph_data.append(graph_object)
 		
+		return graph_data
+
+	def new_generate_graph_data(self):
+		graph_data = []
+
+		for f_o in self.ANALYSIS_OBJECTS:
+			this_pgo_collection = []
+			values_added = 0
+			if self.mode["gpu_type"] == "nvidia":
+				x_string = "Threads: {}\nBlocks: {}".format(f_o["config"][0]["threads"], f_o["config"][0]["blocks"])
+			if self.mode["gpu_type"] == "amd":
+				x_string = "Intensity: {}\nWork Size: {}".format(f_o["config"][0]["intensity"], f_o["config"][0]["worksize"])
+			#
+			#	See what datasets were requested
+			if "min" in self.graph_datasets:	
+				#print("MIN")
+				pgo = PickaxeGraphObject("Minimum Hashrate", "H/s (Min)", x_string, f_o["analysis"]["min_hash_rate"])
+				this_pgo_collection.append(pgo)
+				values_added += 1
+			if "avg" in self.graph_datasets:			
+				#print("AVG")
+				pgo = PickaxeGraphObject("Average Hashrate", "H/s (Avg)", x_string, f_o["analysis"]["average_hash_rate"])
+				this_pgo_collection.append(pgo)
+				values_added += 1
+			if "max" in self.graph_datasets:			
+				#print("MAX")
+				pgo = PickaxeGraphObject("Maximum Hashrate", "H/s (Max)", x_string, f_o["analysis"]["max_hash_rate"])
+				this_pgo_collection.append(pgo)
+				values_added += 1
+			if "wattage" in self.graph_datasets:
+				#print("MAX")
+				pgo = PickaxeGraphObject("Average Wattage", "W (Avg)", x_string, f_o["analysis"]["average_wattage"])
+				this_pgo_collection.append(pgo)
+				values_added += 1
+			if values_added == 1:
+				graph_data.append(this_pgo_collection[0])
+			else:
+				graph_data.append(this_pgo_collection)
+		#print(graph_data)
 		return graph_data
 	#
 	#	Use matplotlib to create and save the graph using given input data
@@ -701,3 +759,32 @@ class PickaxeConfigAssistant():
 		#fig.show()
 		print("Saving graph to: {}".format(file_name))
 		fig.savefig(file_name, facecolor=self.background_colour, transparent=True)
+
+
+	#
+	#	New function that will handle our graphing
+	def new_graph(self, graph_data, path):
+		pg = PickaxeGraph()
+		data = []
+
+		graph_heading_string = self.heading_info_string()
+		mpe = pg.create_matplotlib_graph_object(graph_heading=graph_heading_string, 
+			x_label=self.version_string, y_label="Hashrate (Hashes per second)"
+		)
+		matplotlib_elements = pg.create_graph_object_from_pickaxegraphobjects_and_matplotlib_elements(
+			graph_data, mpe
+		)
+		print("\nSaving graph to: {}\n".format(path))
+		pg.save_graph(matplotlib_elements, path)
+
+
+	#
+	#	A function that can create a string heading for the current GPU details
+	def heading_info_string(self):
+		#
+		#	Assemble the header of the graph, start with the name of the card
+		graph_heading_string = "{} ".format(self.gpu_name)
+		if self.gpu_clocks["core"] != 0 and self.gpu_clocks["memory"] != 0:
+			graph_heading_string += "[Core: {} MHz, Memory: {} MHz] ".format(self.gpu_clocks["core"], self.gpu_clocks["memory"])
+		graph_heading_string += "- XMRig ({}) - XMR".format(self.xmrig_version)
+		return graph_heading_string

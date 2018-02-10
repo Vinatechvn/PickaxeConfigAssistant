@@ -21,11 +21,12 @@ def main(argv):
 	worker_threads = 1
 	mode = "nvidia"
 	runs = []
+	graph_datasets =[]
 
 
 	try:
 		opts, args = getopt.getopt(argv,
-			"i:s:t:b:tmax:tmin:tstep:bmax:bmin:bstep:bsleep:bfactor:affinity:in:inmax:inmin:instep:ws:wsmax:wsmin:wsstep:wt:m:r",
+			"i:s:t:b:tmax:tmin:tstep:bmax:bmin:bstep:bsleep:bfactor:affinity:in:inmax:inmin:instep:ws:wsmax:wsmin:wsstep:wt:m:r:gd",
 			["index=","seconds=",
 			"threads=", "blocks=",
 			"threadsmax=", "threadsmin=","threadsstep=",
@@ -33,7 +34,7 @@ def main(argv):
 			"bsleep=","bfactor=","affinity=", 
 			"intensity=", "intensitymax=", "intensitymin=", "intensitystep=",
 			"worksize=", "worksizemax=", "worksizemin=", "worksizestep=",
-			"workerthreads=", "mode=", "runs="]
+			"workerthreads=", "mode=", "runs=", "graph_datasets="]
 		)
 	except getopt.GetoptError:
 		print()
@@ -145,6 +146,18 @@ def main(argv):
 				})
 			runs = all_runs
 
+		elif opt in ("-gd", "--graph_datasets"):
+			graph_datasets = arg.strip()
+			graph_datasets = graph_datasets.replace("[", "")
+			graph_datasets = graph_datasets.replace("]", "")
+			graph_datasets = graph_datasets.split(",")
+			grap_datasets = []
+			for i in graph_datasets:
+				grap_datasets.append(i.strip())
+			graph_datasets = grap_datasets
+			#print(graph_datasets)
+			
+
 
 	#
 	#	With all of these settings, let's generate our Pickaxe object
@@ -159,12 +172,13 @@ def main(argv):
 		intensity=intensity, worksize=worksize,
 		intensity_max=intensity_max, intensity_min=intensity_min, intensity_step=intensity_step,
 		worksize_max=worksize_max, worksize_min=worksize_min, worksize_step=worksize_step,
-		worker_threads=worker_threads, mode=mode, runs=runs
+		worker_threads=worker_threads, mode=mode, runs=runs, graph_datasets=graph_datasets
 	)
 	#
 	#	R U N 
 	pca.run_analysis()
-	pca.save_graph()
+	#pca.save_graph()
+	pca.new_save_graph()
 
 if __name__ == "__main__":
 	main(sys.argv[1:])

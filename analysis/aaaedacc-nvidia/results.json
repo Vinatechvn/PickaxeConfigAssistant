@@ -1,0 +1,77 @@
+[
+    {
+        "config": [
+            {
+                "index": 0,
+                "threads": 30,
+                "blocks": 8,
+                "bfactor": 12,
+                "bsleep": 25,
+                "affine_to_cpu": 0
+            }
+        ],
+        "analysis": {
+            "total_results": 12,
+            "max_hash_rate": 224.0,
+            "min_hash_rate": 222.5,
+            "average_hash_rate": 223.2,
+            "average_wattage": 16
+        },
+        "information": {
+            "GPU": "GeForce GTX 750 Ti",
+            "GPUType": "nvidia",
+            "XMRigVersion": "2.4.2",
+            "CompletedAt": 1518231961.5279233
+        }
+    },
+    {
+        "config": [
+            {
+                "index": 0,
+                "threads": 32,
+                "blocks": 8,
+                "bfactor": 12,
+                "bsleep": 25,
+                "affine_to_cpu": 0
+            }
+        ],
+        "analysis": {
+            "total_results": 12,
+            "max_hash_rate": 228.4,
+            "min_hash_rate": 225.9,
+            "average_hash_rate": 226.6,
+            "average_wattage": 16
+        },
+        "information": {
+            "GPU": "GeForce GTX 750 Ti",
+            "GPUType": "nvidia",
+            "XMRigVersion": "2.4.2",
+            "CompletedAt": 1518231985.54501
+        }
+    },
+    {
+        "config": [
+            {
+                "index": 0,
+                "threads": 34,
+                "blocks": 8,
+                "bfactor": 12,
+                "bsleep": 25,
+                "affine_to_cpu": 0
+            }
+        ],
+        "analysis": {
+            "total_results": 12,
+            "max_hash_rate": 224.1,
+            "min_hash_rate": 187.2,
+            "average_hash_rate": 216.2,
+            "average_wattage": 15
+        },
+        "information": {
+            "GPU": "GeForce GTX 750 Ti",
+            "GPUType": "nvidia",
+            "XMRigVersion": "2.4.2",
+            "CompletedAt": 1518232009.5590968
+        }
+    }
+]

@@ -1,0 +1,94 @@
+[
+    {
+        "analysis": {
+            "average_wattage": 0,
+            "average_hash_rate": 133.8,
+            "max_hash_rate": 133.8,
+            "total_results": 28,
+            "min_hash_rate": 133.8
+        },
+        "information": {
+            "GPUType": "amd",
+            "XMRigVersion": "2.4.3-beta2",
+            "CompletedAt": 1518232307.864256,
+            "GPU": "AMD Radeon R9 200 Series"
+        },
+        "config": [
+            {
+                "index": 0,
+                "intensity": 128,
+                "worksize": 2,
+                "affine_to_cpu": 0
+            }
+        ]
+    },
+    {
+        "analysis": {
+            "average_wattage": 0,
+            "average_hash_rate": 129.9,
+            "max_hash_rate": 130.0,
+            "total_results": 21,
+            "min_hash_rate": 129.9
+        },
+        "information": {
+            "GPUType": "amd",
+            "XMRigVersion": "2.4.3-beta2",
+            "CompletedAt": 1518232353.868873,
+            "GPU": "AMD Radeon R9 200 Series"
+        },
+        "config": [
+            {
+                "index": 0,
+                "intensity": 128,
+                "worksize": 4,
+                "affine_to_cpu": 0
+            }
+        ]
+    },
+    {
+        "analysis": {
+            "average_wattage": 0,
+            "average_hash_rate": 126.7,
+            "max_hash_rate": 126.8,
+            "total_results": 28,
+            "min_hash_rate": 126.4
+        },
+        "information": {
+            "GPUType": "amd",
+            "XMRigVersion": "2.4.3-beta2",
+            "CompletedAt": 1518232399.8731668,
+            "GPU": "AMD Radeon R9 200 Series"
+        },
+        "config": [
+            {
+                "index": 0,
+                "intensity": 128,
+                "worksize": 8,
+                "affine_to_cpu": 0
+            }
+        ]
+    },
+    {
+        "analysis": {
+            "average_wattage": 0,
+            "average_hash_rate": 237.9,
+            "max_hash_rate": 238.1,
+            "total_results": 28,
+            "min_hash_rate": 237.7
+        },
+        "information": {
+            "GPUType": "amd",
+            "XMRigVersion": "2.4.3-beta2",
+            "CompletedAt": 1518232445.8775506,
+            "GPU": "AMD Radeon R9 200 Series"
+        },
+        "config": [
+            {
+                "index": 0,
+                "intensity": 256,
+                "worksize": 8,
+                "affine_to_cpu": 0
+            }
+        ]
+    }
+]

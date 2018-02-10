@@ -177,8 +177,7 @@ def main(argv):
 	#
 	#	R U N 
 	pca.run_analysis()
-	#pca.save_graph()
-	pca.new_save_graph()
+	pca.save_graph()
 
 if __name__ == "__main__":
 	main(sys.argv[1:])

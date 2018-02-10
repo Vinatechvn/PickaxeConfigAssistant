@@ -94,22 +94,8 @@ class PickaxeConfigAssistant():
 		self.path_results_folder = ".{}".format(os.sep)
 		self.path_results_file = "results.json"
 		#
-		#	Graph settings
-		self.x_inches_width = 9
-		self.x_inches_width_min = 9
-		self.y_inches_height = 12
-		self.y_inches_height_min = 12
-		self.bar_width = 0.5
-		self.background_colour = "#FEFBD0"
-		self.bar_colour = "#8AB9AE"
-		self.bar_colour_max ="#8AB9AE"
-		self.bar_colour_min = "#F4828C"
-		self.bar_colour_average = "#775D6A"
-		self.bar_colour_wattage = "#ACBD86"
-		#
 		#	New Graph settings
 		self.graph_datasets = kwargs.get("graph_datasets", [])
-		#util.mkdir(self.path_results_folder)
 		#
 		#	Regex
 		self.regex_hash_rate_second = r"15m \d+.\d"
@@ -571,51 +557,16 @@ class PickaxeConfigAssistant():
 		if path == "":
 			path = self.path_results_folder + "graph.png"
 		#
-		#	Save our data
-		util.write_file(self.path_results_folder + "graph_data.json",
-			json.dumps(self.generate_graph_data()))
+		#	Save our data (this can go back in I think, not sure if it's useful at the moment)
+		#util.write_file(self.path_results_folder + "graph_data.json",
+		#	json.dumps(self.generate_graph_data()))
 		#
 		#	Graph it and save
 		self.graph(self.generate_graph_data(), path)
-
-	def new_save_graph(self, path=""):
-		if path == "":
-			path = self.path_results_folder + "graph.png"
-		#
-		#	Save our data
-		#util.write_file(self.path_results_folder + "graph_data.json",
-		#	json.dumps(self.new_generate_graph_data()))
-		#
-		#	Graph it and save
-		self.new_graph(self.new_generate_graph_data(), path)
-
 	#
-	#	Generate a list of the data objects we'll need to render a graph
+	#	Using PickaxeGraphObjects(), use PickaxeGraph() to render and save a graph for the dataset that we created
+	#	by running n benchmarks.
 	def generate_graph_data(self):
-		graph_data = []
-		
-		for f_o in self.ANALYSIS_OBJECTS:
-			#
-			#	As we always clone worker threads, we can take element 0 here
-			if self.mode["gpu_type"] == "nvidia":
-				graph_object = {
-					"threads": f_o["config"][0]["threads"],
-					"blocks": f_o["config"][0]["blocks"],
-				}
-			if self.mode["gpu_type"] == "amd":
-				graph_object = {
-					"intensity": f_o["config"][0]["intensity"],
-					"worksize": f_o["config"][0]["worksize"],
-				}
-			graph_object["max"] = f_o["analysis"]["max_hash_rate"]
-			graph_object["min"] = f_o["analysis"]["min_hash_rate"]
-			graph_object["average"] = f_o["analysis"]["average_hash_rate"]
-			graph_object["wattage"] = f_o["analysis"]["average_wattage"]
-			graph_data.append(graph_object)
-		
-		return graph_data
-
-	def new_generate_graph_data(self):
 		graph_data = []
 
 		for f_o in self.ANALYSIS_OBJECTS:
@@ -653,117 +604,10 @@ class PickaxeConfigAssistant():
 				graph_data.append(this_pgo_collection)
 		#print(graph_data)
 		return graph_data
-	#
-	#	Use matplotlib to create and save the graph using given input data
-	def graph(self, graph_data, file_name):
-		x = []
-		y = []
-		z = []
-		a = []
-		b = []
-		#
-		#	x -> = threads | blocks
-		#	y ^^ = hashrate
-		graph_data_limit = 100
-		if len(graph_data) >= graph_data_limit:
-			print("WARNING: Too many data points to graph, I'll only graph the first {} analyses.".format(graph_data_limit))
-			graph_data = graph_data[:graph_data_limit]
-
-		for data in graph_data:
-			if self.mode["gpu_type"] == "nvidia":
-				x_string = "Threads: {}\nBlocks: {}".format(data["threads"], data["blocks"])
-			if self.mode["gpu_type"] == "amd":
-				x_string = "Intensity: {}\nWork Size: {}".format(data["intensity"], data["worksize"])
-			if self.worker_threads > 1:
-				x_string = "{} (x{})\n{} (x{})".format(x_string.split("\n")[0], self.worker_threads,
-					x_string.split("\n")[1], self.worker_threads)
-			x.append(x_string)
-
-			y_string = data["max"]
-			y.append(y_string)
-
-			z_string = data["min"]
-			z.append(z_string)
-
-			a_string = data["average"]
-			a.append(a_string)
-
-			b_string = data["wattage"]
-			b.append(b_string)
-		
-		#
-		#	X location for the groups
-		N = len(graph_data)
-		ind = np.arange(N)
-		#
-		#	Bar width
-		self.bar_width = 0.2
-		#
-		#	Declare our graphing objects
-		fig, ax = plt.subplots(facecolor=self.background_colour)
-		ax.set_facecolor(self.background_colour)
-		self.x_inches_width_min = 9
-		self.x_inches_width = int(len(graph_data) * 2.75)
-		self.y_inches_height = 12
-		if self.x_inches_width < self.x_inches_width_min:
-			self.x_inches_width = self.x_inches_width_min
-		#
-		#	Set the output size
-		fig.set_size_inches(self.x_inches_width, self.y_inches_height)
-		#
-		#	Map the data to a bars object
-		rectangles_max = ax.bar(ind, y, self.bar_width, color=self.bar_colour_max)
-		rectangles_min = ax.bar(ind + self.bar_width, z, self.bar_width, color=self.bar_colour_min)
-		rectangles_average = ax.bar(ind + self.bar_width*2, a, self.bar_width, color=self.bar_colour_average)
-		rectangles_wattage = ax.bar(ind + self.bar_width*3, b, self.bar_width, color=self.bar_colour_wattage)
-		#
-		#	Format the graph axis markers
-		ax.set_xlabel('\n\n\nPickaxe Config Assistant\nALPHA-{}'.format(self.version_number))
-		ax.set_ylabel('Hashrate')
-		#
-		#	Assemble the header of the graph, start with the name of the card
-		graph_heading_string = "{} ".format(self.gpu_name)
-		#
-		#	If we have valid clocks, include them
-		if self.gpu_clocks["core"] != 0 and self.gpu_clocks["memory"] != 0:
-			graph_heading_string += "[Core: {} MHz, Memory: {} MHz] ".format(self.gpu_clocks["core"], self.gpu_clocks["memory"])
-		graph_heading_string += "- XMRig ({}) - XMR".format(self.xmrig_version)
-		#
-		#	Set the title/heading for this graph
-		ax.set_title(graph_heading_string)
-		ax.set_xticks(ind + self.bar_width*2)
-		ax.set_xticklabels((x))
-		#
-		#
-		#	Apply our labels, this should be better
-		for rect in rectangles_max:
-			height = rect.get_height()
-			ax.text(rect.get_x() + rect.get_width()/2., 0.30*height,
-				'Max\n%d' % int(height) + "H/s",
-				ha='center', va='bottom')
-		for rect in rectangles_min:
-			height = rect.get_height()
-			ax.text(rect.get_x() + rect.get_width()/2., 0.60*height,
-				'Min\n%d' % int(height) + "H/s",
-				ha='center', va='bottom')
-		for rect in rectangles_average:
-			height = rect.get_height()
-			ax.text(rect.get_x() + rect.get_width()/2., 0.90*height,
-				'Avg\n%d' % int(height) + "H/s",
-				ha='center', va='bottom')
-		for rect in rectangles_wattage:
-			height = rect.get_height()
-			ax.text(rect.get_x() + rect.get_width()/2., 0.5*height,
-				'Power\n%d' % int(height) + "W",
-				ha='center', va='bottom')
-		#fig.show()
-		print("Saving graph to: {}".format(file_name))
-		fig.savefig(file_name, facecolor=self.background_colour, transparent=True)
-
 
 	#
 	#	New function that will handle our graphing
-	def new_graph(self, graph_data, path):
+	def graph(self, graph_data, path):
 		pg = PickaxeGraph()
 		data = []
 
@@ -776,7 +620,6 @@ class PickaxeConfigAssistant():
 		)
 		print("\nSaving graph to: {}\n".format(path))
 		pg.save_graph(matplotlib_elements, path)
-
 
 	#
 	#	A function that can create a string heading for the current GPU details

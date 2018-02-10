@@ -77,7 +77,7 @@ main.py --index 3 --threads 8 --threadsmax 192 --threadsstep 8 --blocks 8 --seco
 ```
 
 It's also possible to run specific benchmarks of given settings using the `--runs "[AxB, AxB]"` argument:
-The selected graph outputs here will only render the max/min/avg hashrate columns:
+The output graph will only render the max/min/avg hashrate columns as we're using `--graph_datasets`:
 ```
 main.py --runs "[8x2, 16x2, 32x2, 64x2]" --graph_datasets "[max, min, avg]"
 ```
@@ -87,7 +87,7 @@ main.py --runs "[8x2, 16x2, 32x2, 64x2]" --graph_datasets "[max, min, avg]"
 The usage is pretty the same as for Nvidia, but for AMD our threads/blocks become intensity/worksize.
 
 Default benchmark timing for a single setting [256x8] on a system with only 1 GPU (or GPU #0 is our target).
-The selected graph outputs here will only render the max/min hashrate columns:
+The output graph will only render the max/min hashrate columns as we're using `--graph_datasets`:
 ```
 main.py --mode amd --intensity 256 --worksize 8 --graph_datasets "[max, min]"
 ```

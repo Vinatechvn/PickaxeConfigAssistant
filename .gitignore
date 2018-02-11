@@ -8,4 +8,4 @@ ___archive/
 docs/
 tests/
 TEST_1.png
-analysis/
+analysis/*

@@ -91,7 +91,8 @@ class PickaxeConfigAssistant():
 			self.filename_xmrig_exe_amd += ".exe"
 		self.filename_xmrig_config = "config.json"
 		self.filename_xmrig_log = "log.txt"
-		self.path_results_folder = ".{}".format(os.sep)
+		self.path_results_folder = ".{}analysis{}".format(os.sep, os.sep)
+		util.mkdir(self.path_results_folder)
 		self.path_results_file = "results.json"
 		#
 		#	New Graph settings

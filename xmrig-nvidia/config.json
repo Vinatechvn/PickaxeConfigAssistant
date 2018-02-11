@@ -25,7 +25,7 @@
         {
             "index": 0,
             "threads": 30,
-            "blocks": 10,
+            "blocks": 8,
             "bfactor": 12,
             "bsleep": 25,
             "affine_to_cpu": 0

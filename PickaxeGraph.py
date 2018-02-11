@@ -59,6 +59,10 @@ class PickaxeGraph():
 		tick_locations = []
 		tick_labels = []
 		#
+		#	Adding a limit on the inputs (first 100 results)
+		if len(pgo_list) > 100:
+			pgo_list = pgo_list[:100]
+		#
 		#	For every PickaxeGraphObject we were given		
 		for pgo in pgo_list:
 			#

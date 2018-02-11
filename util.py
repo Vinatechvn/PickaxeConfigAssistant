@@ -22,3 +22,13 @@ def write_file(file_path, content):
 	with open(file_path, "w") as f:
 		f.write(content)
 		return True
+#
+#	Delete a directory and all of its contents
+def remove_directory(directory_path):
+	for file in os.listdir(directory_path):
+		file_path = os.path.join(directory_path, file)
+		if os.path.isfile(file_path):
+			os.remove(file_path)
+			#print(file_path)
+	os.rmdir(directory_path)
+	#print(directory_path)

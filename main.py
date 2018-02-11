@@ -21,7 +21,7 @@ def main(argv):
 	worker_threads = 1
 	mode = "nvidia"
 	runs = []
-	graph_datasets =[]
+	graph_datasets =["min", "max", "avg"]
 
 
 	try:
@@ -176,8 +176,9 @@ def main(argv):
 	)
 	#
 	#	R U N 
-	pca.run_analysis()
-	pca.save_graph()
+	status = pca.run_analysis()
+	if status:
+		pca.save_graph()
 
 if __name__ == "__main__":
 	main(sys.argv[1:])

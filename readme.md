@@ -11,6 +11,7 @@ _Note, the `master` branch contains the most stable build available._
 #### Table of contents
 * [Features](#features)
 * [Installation](#installation)
+* [Starting PCA](#starting)
 * [Usage Examples](#usage)
 * [Donations](#donations)
 * [Contact](#contact)
@@ -52,7 +53,13 @@ _Note, the `master` branch contains the most stable build available._
 3. Clone this repository `git clone https://github.com/PentagonalCube/PickaxeConfigAssistant.git`.
 4. Copy the `xmrig-nvidia`/`xmrig-amd` executable file from the XMRig release and paste it into the `PickaxeConfigAssistant/xmrig-nvidia/`/`PickaxeConfigAssistant/xmrig-amd/` folder.
     * On Linux you'll need to compile the XMRig source code before you can copy it, see their instructions on [compiling XMRig](https://github.com/xmrig/xmrig-nvidia/wiki/Ubuntu-Build)
-5. Use Python3+ to run the `PickaxeConfigAssistant/main.py` file (`python3 main.py < **args >`) and hand in the arguments from the list below in order to configure it to your requirements.
+
+
+### Starting PCA
+1. Open a new command window.
+2. Navigate to where PCA was downloaded to `cd .../PickaxeConfigAssistant-master/`.
+3. Use Python3+ to run the `PickaxeConfigAssistant/main.py` file and hand in the arguments from the list below in order to configure it to your requirements.
+    * Example: `python3 main.py --arg_one 2 --arg_two 3`
 
 
 ## Usage - Nvidia

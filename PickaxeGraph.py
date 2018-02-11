@@ -30,7 +30,7 @@ class PickaxeGraph():
 	#
 	#	Create our object
 	def __init__(self, **kwargs):
-		self.settings = self.read_settings_from_config_file()
+		#self.settings = self.read_settings_from_config_file()
 		self.foreground_colour = kwargs.get("foreground_colour", "#182C41")
 		self.background_colour = kwargs.get("background_colour", "#182C41")
 		self.bar_colour = kwargs.get("bar_colour", "#406485")

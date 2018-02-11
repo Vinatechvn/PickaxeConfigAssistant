@@ -29,7 +29,7 @@ class PickaxeConfigAssistant():
 	#
 	#	Constructor
 	def __init__(self, **kwargs):
-		self.version_number = 154021
+		self.version_number = 155736
 		self.version_string = "PICKAXE-ALPHA-{}".format(self.version_number)
 		print("Creating new PickaxeConfigAssistant() | Version: {}".format(self.version_number))
 		self.mode = {"mining_software":"xmrig", "gpu_type":"nvidia"}
@@ -95,7 +95,7 @@ class PickaxeConfigAssistant():
 		self.path_results_file = "results.json"
 		#
 		#	New Graph settings
-		self.graph_datasets = kwargs.get("graph_datasets", [])
+		self.graph_datasets = kwargs.get("graph_datasets", ["avg"])
 		#
 		#	Regex
 		self.regex_hash_rate_second = r"15m \d+.\d"
@@ -119,35 +119,8 @@ class PickaxeConfigAssistant():
 			#	We need to program these runs, so using the first one
 			self.update_next_benchmark_settings_using_runs()
 
-	#
-	#	Update our settings from our next run object
-	def update_next_benchmark_settings_using_runs(self):
-		if self.mode["gpu_type"] == "nvidia":
-			self.thread_count = self.runs[self.run_counter]["a"]
-			self.block_count = self.runs[self.run_counter]["b"]
-		if self.mode["gpu_type"] == "amd":
-			self.intensity = self.runs[self.run_counter]["a"]
-			self.worksize = self.runs[self.run_counter]["b"]
-		self.run_counter += 1
 
-	#
-	#	Get the total number of loops the application will be active for
-	def calculate_total_number_of_iterations(self):
-		if self.runs == []:
-			if self.mode["gpu_type"] == "nvidia":
-				#
-				#	Handle Nvidia : threads & blocks
-				thread_loops = 1 + (self.thread_count_max / self.thread_count_step - self.thread_count_min / self.thread_count_step)
-				block_loops = 1 + (self.block_count_max / self.block_count_step - self.block_count_min / self.block_count_step)
-				return thread_loops * block_loops
-			if self.mode["gpu_type"] == "amd":
-				#
-				#	Handle AMD : intensity & work size
-				intensity_loops = 1 + (self.intensity_max / self.intensity_step - self.intensity_min / self.intensity_step)
-				worksize_loops = 1 + (self.worksize_max / self.worksize_step - self.worksize_min / self.worksize_step)
-				return intensity_loops * worksize_loops
-		else:
-			return len(self.runs)
+
 	#
 	#	M A I N L I N E
 	#
@@ -159,102 +132,111 @@ class PickaxeConfigAssistant():
 		self.path_results_folder = ".{}analysis{}{}-{}{}".format(os.sep, os.sep, util.random_string(8), self.mode["gpu_type"], os.sep)
 		util.mkdir(self.path_results_folder)
 		#
-		#	Clear the old XMRig log file
-		util.write_file(self.get_xmrig_log_file_path(), "")
-		#
-		#	Print estimated run time
-		estimated_run_time = int(self.benchmark_mining_seconds * self.calculate_total_number_of_iterations())
-		print("Estimated run time: {} minutes".format(int(estimated_run_time / 60)))
-		#
-		#	While we are within the limits of all of our settings, iterate
-		is_first_iteration = True
-		while self.is_continue:
+		#	Check XMRig is actually installed
+		if self.is_xmrig_available():
 			#
-			#	Save our config to the XMRigs' config.txt
-			self.update_xmrig_config_json_with_threads_object(
-				self.generate_thread_setting_object())
-			#
-			#	Run this computation with the given settings we just updated
-			if self.mode["gpu_type"] == "nvidia":
-				print("\nStarting XMRig-{} with threads:{} blocks:{} ({}x{})\n".format(self.mode["gpu_type"], self.thread_count, 
-					self.block_count, self.thread_count, self.block_count))
-			if self.mode["gpu_type"] == "amd":
-				print("\nStarting XMRig-{} with intensity:{} worksize:{} ({}x{})\n".format(self.mode["gpu_type"], self.intensity, 
-					self.worksize, self.intensity, self.worksize))
-			#
-			#	Start XMRig using subprocess
-			xmrig_status = self.run_xmrig()
-			#
-			#	Did XMRig run ok?
-			#if xmrig_status != False:
-			#
-			#	Update our GPU Name if it is not already set
-			if is_first_iteration:
-				self.gpu_name = self.read_gpu_name_from_xmrig_log()
-				self.gpu_clocks = self.read_gpu_clocks_from_xmrig_log()
-				#
-				#	Might as well read the XMRig version here too
-				self.xmrig_version = self.read_xmrig_version_from_xmrig_log()
-				is_first_iteration = False
-			#
-			#	Analyse the results
-			analysis_object = self.analyse_xmrig_log_returning_object(
-				self.get_xmrig_log_file_path())
-			#
-			#	Create the information object (TEMP)
-			information_object = {
-				"GPU": self.gpu_name,
-				"GPUType": self.mode["gpu_type"],
-				"XMRigVersion": self.xmrig_version,
-				"CompletedAt": time.time()
-			}
-			#
-			#	Assemble what we need to store for metrics/info/graphing
-			final_object = {
-				"config": self.generate_thread_setting_object(),
-				"analysis": analysis_object,
-				"information": information_object
-			}
-			#
-			#	Save the results to the database
-			self.ANALYSIS_OBJECTS.append(final_object)
-			#
-			#	Write the results to file
-			json_analysis_objects = json.dumps(self.ANALYSIS_OBJECTS, indent=4, 
-				separators=(',', ': '))
-			util.write_file(self.get_results_file_path(), json_analysis_objects)
-			
-			#
-			#	Clear the old XMRig config file
+			#	Clear the old XMRig log file
 			util.write_file(self.get_xmrig_log_file_path(), "")
 			#
-			#	End of the loop, let's update our config and check all the rules
-			if self.runs != []:
+			#	Print estimated run time
+			estimated_run_time = int(self.benchmark_mining_seconds * self.calculate_total_number_of_iterations())
+			print("Estimated run time: {} minutes".format(int(estimated_run_time / 60)))
+			#
+			#	While we are within the limits of all of our settings, iterate
+			is_first_iteration = True
+			while self.is_continue:
 				#
-				#	Update using runs
-				if self.run_counter == len(self.runs):
+				#	Save our config to the XMRigs' config.txt
+				self.update_xmrig_config_json_with_threads_object(
+					self.generate_thread_setting_object())
+				#
+				#	Run this computation with the given settings we just updated
+				if self.mode["gpu_type"] == "nvidia":
+					print("\nStarting XMRig-{} with threads:{} blocks:{} ({}x{})\n".format(self.mode["gpu_type"], self.thread_count, 
+						self.block_count, self.thread_count, self.block_count))
+				if self.mode["gpu_type"] == "amd":
+					print("\nStarting XMRig-{} with intensity:{} worksize:{} ({}x{})\n".format(self.mode["gpu_type"], self.intensity, 
+						self.worksize, self.intensity, self.worksize))
+				#
+				#	Start XMRig using subprocess
+				xmrig_status = self.run_xmrig()
+				#
+				#	Did XMRig run ok?
+				#if xmrig_status != False:
+				#
+				#	Update our GPU Name if it is not already set
+				if is_first_iteration:
+					self.gpu_name = self.read_gpu_name_from_xmrig_log()
+					self.gpu_clocks = self.read_gpu_clocks_from_xmrig_log()
 					#
-					#	End, break this loop
-					self.is_continue = False
+					#	Might as well read the XMRig version here too
+					self.xmrig_version = self.read_xmrig_version_from_xmrig_log()
+					is_first_iteration = False
+				#
+				#	Analyse the results
+				analysis_object = self.analyse_xmrig_log_returning_object(
+					self.get_xmrig_log_file_path())
+				#
+				#	Create the information object (TEMP)
+				information_object = {
+					"GPU": self.gpu_name,
+					"GPUType": self.mode["gpu_type"],
+					"XMRigVersion": self.xmrig_version,
+					"CompletedAt": time.time()
+				}
+				#
+				#	Assemble what we need to store for metrics/info/graphing
+				final_object = {
+					"config": self.generate_thread_setting_object(),
+					"analysis": analysis_object,
+					"information": information_object
+				}
+				#
+				#	Save the results to the database
+				self.ANALYSIS_OBJECTS.append(final_object)
+				#
+				#	Write the results to file
+				json_analysis_objects = json.dumps(self.ANALYSIS_OBJECTS, indent=4, 
+					separators=(',', ': '))
+				util.write_file(self.get_results_file_path(), json_analysis_objects)
+				#
+				#	Clear the old XMRig config file
+				util.write_file(self.get_xmrig_log_file_path(), "")
+				#
+				#	End of the loop, let's update our config and check all the rules
+				if self.runs != []:
+					#
+					#	Update using runs
+					if self.run_counter == len(self.runs):
+						#
+						#	End, break this loop
+						self.is_continue = False
+					else:
+						#
+						#	We still have more runs, let's continue
+						self.update_next_benchmark_settings_using_runs()
 				else:
 					#
-					#	We still have more runs, let's continue
-					self.update_next_benchmark_settings_using_runs()
-			else:
-				#
-				#	Update using the next iteration
-				self.continue_this_computation()
+					#	Update using the next iteration
+					self.continue_this_computation()
+			return True
+		else:
+			#
+			#	XMRig is not there, alert the user
+			print("\nERROR:\nXMRig was not available, is it installed to the 'PickaxeConfigAssistant/xmrig-nvidia' or 'PickaxeConfigAssistant/xmrig-amd' folder?\n")
+			#
+			#	Tidy up, delete the folder
+			util.remove_directory(self.path_results_folder)
+			return False
 
 
 
-	
 
-	
 
 
 	
 	#
-	#	D A T A  F U N C T I O N S
+	#	D A T A  /  I N T E R N A L  F U N C T I O N S
 	#
 	#	Basic getter/setters
 	def get_xmrig_config_file_path(self):
@@ -266,6 +248,18 @@ class PickaxeConfigAssistant():
 		return self.path_logs_folder + self.filename_xmrig_log
 	def get_results_file_path(self):
 		return self.path_results_folder + self.path_results_file
+
+	#
+	#	A function to check if XMRig is in our directory
+	def is_xmrig_available(self):
+		if self.mode["gpu_type"] == "nvidia":
+			cmd_string = self.path_xmrig_root_nvidia + self.filename_xmrig_exe_nvidia
+		if self.mode["gpu_type"] == "amd":
+			cmd_string = self.path_xmrig_root_amd + self.filename_xmrig_exe_amd
+		#
+		#	Returns True is it's there
+		return os.path.isfile(cmd_string)
+
 	#
 	#	Create a Thread object to model our settings
 	def generate_thread_setting_object(self):
@@ -296,6 +290,8 @@ class PickaxeConfigAssistant():
 	#	If we have iterated through all thread/block inputs end,
 	#	else, add a thread/block to the count
 	def continue_this_computation(self):
+		#
+		#	NVIDIA cards
 		if self.mode["gpu_type"] == "nvidia":
 			if self.thread_count < self.thread_count_max:
 				#
@@ -330,7 +326,34 @@ class PickaxeConfigAssistant():
 					self.intensity = self.intensity_min
 					self.worksize += self.worksize_step
 			return self.is_continue
-
+	#
+	#	Update our settings from our next run object
+	def update_next_benchmark_settings_using_runs(self):
+		if self.mode["gpu_type"] == "nvidia":
+			self.thread_count = self.runs[self.run_counter]["a"]
+			self.block_count = self.runs[self.run_counter]["b"]
+		if self.mode["gpu_type"] == "amd":
+			self.intensity = self.runs[self.run_counter]["a"]
+			self.worksize = self.runs[self.run_counter]["b"]
+		self.run_counter += 1
+	#
+	#	Get the total number of loops the application will be active for
+	def calculate_total_number_of_iterations(self):
+		if self.runs == []:
+			if self.mode["gpu_type"] == "nvidia":
+				#
+				#	Handle Nvidia : threads & blocks
+				thread_loops = 1 + (self.thread_count_max / self.thread_count_step - self.thread_count_min / self.thread_count_step)
+				block_loops = 1 + (self.block_count_max / self.block_count_step - self.block_count_min / self.block_count_step)
+				return thread_loops * block_loops
+			if self.mode["gpu_type"] == "amd":
+				#
+				#	Handle AMD : intensity & work size
+				intensity_loops = 1 + (self.intensity_max / self.intensity_step - self.intensity_min / self.intensity_step)
+				worksize_loops = 1 + (self.worksize_max / self.worksize_step - self.worksize_min / self.worksize_step)
+				return intensity_loops * worksize_loops
+		else:
+			return len(self.runs)
 
 
 
@@ -468,16 +491,9 @@ class PickaxeConfigAssistant():
 				hash_rate_object["average_hash_rate"] = round(hash_rate_object["average_hash_rate"] / hash_rate_object["total_results"], 1)
 				#
 				#	For every wattage reading
-				total = 0
-				elements = 0
-				for wat in wattages_list:
-					if wat > 0:
-						total += wat
-						elements += 1
-				if elements != 0:
-					hash_rate_object["average_wattage"] = int(total / elements)
-				else:
-					hash_rate_object["average_wattage"] = 0
+				hash_rate_object["average_wattage"] = 0
+				if len(wattages_list) > 0:
+					hash_rate_object["average_wattage"] = int(sum(wattages_list) / len(wattages_list))
 			else:
 				hash_rate_object["min_hash_rate"] = 0
 				hash_rate_object["ERROR"] = True
@@ -568,7 +584,9 @@ class PickaxeConfigAssistant():
 	#	by running n benchmarks.
 	def generate_graph_data(self):
 		graph_data = []
-
+		#
+		#	For every object in our analysis results, creat a PickaxeGraphObject and save it to a list
+		#	Note, some lists elements are lists of PickaxeGraphObject, this is compatible with PickaxeGraph
 		for f_o in self.ANALYSIS_OBJECTS:
 			this_pgo_collection = []
 			values_added = 0
@@ -602,7 +620,6 @@ class PickaxeConfigAssistant():
 				graph_data.append(this_pgo_collection[0])
 			else:
 				graph_data.append(this_pgo_collection)
-		#print(graph_data)
 		return graph_data
 
 	#
